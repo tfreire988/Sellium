@@ -40,9 +40,37 @@ npm run build   # production build (static prerender)
 npm run lint
 ```
 
-## Out of scope
+## Backend groundwork (credential-free)
 
-`project/uploads/sellium-brief-desarrollo.md` describes the full product
-architecture (Supabase, Stripe, Claude vision extraction, PDF generation). This
-repo implements only the **landing page**; the app screens (`Sellium App.dc.html`)
-and backend are separate future work.
+The scaffolding from `project/uploads/sellium-brief-desarrollo.md` that needs **no
+keys yet** is in place:
+
+- `supabase/migrations/0001_schema.sql` — full schema (§2)
+- `supabase/migrations/0002_rls.sql` — Row Level Security (pyme sees own rows;
+  gestoría also sees rows tied to its managed clients)
+- `supabase/seed/factores_emision.sql` — **placeholder** factors, loudly flagged;
+  must be replaced with the official MITECO figures before any real report (§5)
+- `src/lib/emisiones.ts` — pure Scope 1/2/3 calculation, testable without a DB
+- `src/lib/server/{env,supabase}.ts` — server-only env accessor + service-role
+  client (marked `server-only`, so importing them into a client component fails
+  the build)
+- `src/app/api/{facturas/extraer, informes/generar, informes/enviar, stripe/webhook}/route.ts`
+  — real handlers: input validation, auth-safe DB access, and Stripe signature
+  verification are done; the parts needing live credentials (Claude vision call,
+  PDF render, email send, Stripe/DB mutations) return `501` with a clear note
+- `.env.example` — every key documented; only the two Supabase `NEXT_PUBLIC_*`
+  values are browser-exposed, all secrets are server-only
+
+### To make it live (needs credentials)
+
+1. Create a Supabase project; run the two migrations, then the seed **after**
+   replacing the placeholder MITECO factors with official values.
+2. Fill `.env.local` from `.env.example` (Supabase, `ANTHROPIC_API_KEY`, Stripe,
+   Resend).
+3. Implement the `501` bodies: Storage download + Claude extraction, PDF render +
+   upload, email send, and the Stripe/DB mutations.
+
+## Still out of scope
+
+The app screens (`project/Sellium App.dc.html`) and the authenticated dashboard
+UI are separate future work.
