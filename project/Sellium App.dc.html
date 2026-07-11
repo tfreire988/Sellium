@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Sellium — Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; background: #1C2620; }
+    body { font-family: 'IBM Plex Sans', sans-serif; color: #F2EEE0; -webkit-font-smoothing: antialiased; }
+    a { color: #C98F55; text-decoration: none; }
+    a:hover { color: #B8763A; text-decoration: underline; }
+    ::selection { background: #B8763A; color: #1C2620; }
+    @keyframes sellium-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  </style>
+</helmet>
+
+<sc-if value="{{ isEs }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; min-height: 100vh; min-width: 1100px; background: #1C2620">
+
+  <!-- TOP BAR -->
+  <div data-screen-label="Topbar" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid rgba(140,150,137,0.22)">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true">
+        <circle cx="17" cy="17" r="14.5" fill="none" stroke="#B8763A" stroke-width="2" stroke-dasharray="86 4" transform="rotate(20 17 17)"></circle>
+        <circle cx="17.6" cy="16.5" r="13.6" fill="none" stroke="#B8763A" stroke-width="0.9" opacity="0.5"></circle>
+        <text x="17" y="22.5" text-anchor="middle" font-family="Fraunces, serif" font-size="16" font-weight="700" fill="#B8763A">S</text>
+      </svg>
+      <span style="font-family: Fraunces, serif; font-weight: 600; font-size: 19px">Sellium</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px">
+      <div style="display: flex; gap: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; border: 1px solid rgba(140,150,137,0.4); border-radius: 6px 4px 7px 4px; overflow: hidden"><button onClick="{{ setEs }}" style="{{ styleEsBtn }}">ES</button><button onClick="{{ setEn }}" style="{{ styleEnBtn }}">EN</button></div>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #8C9689; border: 1px solid rgba(140,150,137,0.35); border-radius: 5px 3px 6px 3px; padding: 4px 10px; white-space: nowrap">PLAN GESTORÍA</span>
+      <span style="font-size: 14px; color: #C7CCC2">Asesoría Ficticia, S.L.P.</span>
+      <div style="width: 34px; height: 34px; border-radius: 50%; background: #4F6B4A; color: #F2EEE0; display: flex; align-items: center; justify-content: center; font-family: Fraunces, serif; font-weight: 600; font-size: 15px">A</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex: 1">
+
+    <!-- SIDEBAR -->
+    <div data-screen-label="Sidebar" style="width: 232px; flex-shrink: 0; border-right: 1px solid rgba(140,150,137,0.22); padding: 26px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px">
+      <button onClick="{{ goSubida }}" style="{{ styleNavNuevo }}">+ Nuevo informe</button>
+      <button onClick="{{ goHistorial }}" style="{{ styleNavHistorial }}">Historial</button>
+      <button onClick="{{ goPanel }}" style="{{ styleNavPanel }}">Panel de clientes</button>
+      <button onClick="{{ goPlanes }}" style="{{ styleNavPlanes }}">Plan y facturación</button>
+    </div>
+
+    <!-- MAIN -->
+    <div style="flex: 1; padding: 44px 56px 80px; box-sizing: border-box; max-width: 1000px">
+
+      <!-- 4.1 SUBIDA -->
+      <sc-if value="{{ isSubida }}" hint-placeholder-val="{{ true }}">
+        <div data-screen-label="Subida de facturas">
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #8C9689; text-transform: uppercase; margin: 0 0 10px">Nuevo informe · Paso 1 de 3</p>
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 28px">Sube tus facturas</h1>
+          <div style="background: #F2EEE0; color: #241F16; border-radius: 11px 5px 9px 6px; transform: rotate(-0.4deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 34px 38px; box-sizing: border-box; max-width: 760px">
+            <div style="border: 1.5px dashed #A89E88; border-radius: 9px 6px 10px 5px; padding: 36px 32px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+              <svg width="38" height="46" viewBox="0 0 38 46" aria-hidden="true">
+                <rect x="2" y="2" width="34" height="42" rx="3" fill="none" stroke="#7C7368" stroke-width="1.8"></rect>
+                <line x1="9" y1="12" x2="29" y2="12" stroke="#7C7368" stroke-width="1.8"></line>
+                <line x1="9" y1="19" x2="29" y2="19" stroke="#7C7368" stroke-width="1.8"></line>
+                <line x1="9" y1="26" x2="22" y2="26" stroke="#7C7368" stroke-width="1.8"></line>
+                <line x1="9" y1="35" x2="29" y2="35" stroke="#B8763A" stroke-width="2.4"></line>
+              </svg>
+              <p style="font-size: 16.5px; font-weight: 500; margin: 0; max-width: 46ch">Arrastra aquí las facturas de luz, gas o combustible del último año</p>
+              <p style="font-size: 14px; color: #7C7368; margin: 0">Valen fotos y PDF, como las tengas.</p>
+              <button onClick="{{ addFile }}" style="background: #B8763A; color: #1C2620; font-weight: 600; font-size: 15px; padding: 11px 22px; border: none; border-radius: 8px 5px 9px 5px; cursor: pointer; margin-top: 6px" style-hover="background: #A6682F">Elegir archivos</button>
+              <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C7368; margin: 4px 0 0">desde el móvil también puedes hacerles una foto</p>
+            </div>
+            <div style="display: flex; flex-direction: column; margin-top: 22px">
+              <sc-for list="{{ files }}" as="f" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 14px; padding: 11px 4px; border-top: 1px solid #E4DECC">
+                  <div style="width: 30px; height: 38px; background: #FBF8EF; border: 1px solid #D8D0BC; border-radius: 2px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 7px 5px; box-sizing: border-box"><div style="height: 2px; background: #B8763A; width: 60%"></div><div style="height: 2px; background: #C4BCA8"></div><div style="height: 2px; background: #C4BCA8; width: 70%"></div></div>
+                  <span style="font-size: 14.5px; font-weight: 500; flex: 1">{{ f.name }}</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C7368">{{ f.size }}</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #4F6B4A">LEÍDA ✓</span>
+                  <button onClick="{{ f.remove }}" style="background: transparent; border: none; color: #7C7368; font-size: 16px; cursor: pointer; padding: 2px 6px" style-hover="color: #9C3B3B">×</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; max-width: 760px; margin-top: 26px">
+            <button onClick="{{ goDest }}" style="background: #B8763A; color: #1C2620; font-weight: 600; font-size: 16px; padding: 14px 26px; border: none; border-radius: 9px 5px 10px 6px; cursor: pointer" style-hover="background: #A6682F">Siguiente: ¿para quién es? →</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.2 DESTINATARIO -->
+      <sc-if value="{{ isDest }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Seleccion de destinatario">
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #8C9689; text-transform: uppercase; margin: 0 0 10px">Nuevo informe · Paso 2 de 3</p>
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 14px">¿Para qué cliente es este informe?</h1>
+          <p style="font-size: 16px; color: #C7CCC2; margin: 0 0 30px; max-width: 58ch; line-height: 1.55">El informe lleva el nombre de tu cliente y se ajusta a su información conforme trabajamos contigo — no es un PDF genérico con tus datos rellenados.</p>
+          <div style="background: #F2EEE0; color: #241F16; border-radius: 9px 6px 11px 5px; transform: rotate(0.4deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 30px 34px; box-sizing: border-box; max-width: 620px">
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <sc-for list="{{ destOptions }}" as="opt" hint-placeholder-count="3">
+                <button onClick="{{ opt.select }}" style="{{ opt.style }}">
+                  <span style="{{ opt.dotStyle }}"></span>
+                  <span style="flex: 1; text-align: left">{{ opt.name }}</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #7C7368">{{ opt.hint }}</span>
+                </button>
+              </sc-for>
+              <input value="{{ customDest }}" onInput="{{ onCustomDest }}" placeholder="Otro: escribe el nombre de tu cliente…" style="font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; padding: 13px 16px; border: 1.5px solid #C4BCA8; border-radius: 6px 4px 7px 4px; background: #FBF8EF; color: #241F16; outline: none" style-focus="border-color: #B8763A">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; max-width: 620px; margin-top: 26px">
+            <button onClick="{{ goSubida }}" style="background: transparent; border: none; color: #8C9689; font-size: 15px; cursor: pointer; padding: 0" style-hover="color: #F2EEE0">← Volver a las facturas</button>
+            <button onClick="{{ startProc }}" style="background: #B8763A; color: #1C2620; font-weight: 600; font-size: 16px; padding: 14px 26px; border: none; border-radius: 9px 5px 10px 6px; cursor: pointer" style-hover="background: #A6682F">Generar el informe</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.3 PROCESANDO -->
+      <sc-if value="{{ isProc }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Procesando" style="display: flex; flex-direction: column; align-items: center; padding-top: 70px">
+          <svg width="64" height="64" viewBox="0 0 64 64" style="animation: sellium-spin 2.6s linear infinite" aria-hidden="true">
+            <circle cx="32" cy="32" r="27" fill="none" stroke="#B8763A" stroke-width="2.6" stroke-dasharray="150 20"></circle>
+            <circle cx="32.8" cy="31.4" r="25.5" fill="none" stroke="#B8763A" stroke-width="1" opacity="0.45"></circle>
+          </svg>
+          <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 44px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-width: 480px">
+            <p style="{{ styleProcA }}">Leyendo tus {{ fileCount }} facturas… <span style="color: #4F6B4A">{{ checkA }}</span></p>
+            <p style="{{ styleProcB }}">Calculando con los factores oficiales del MITECO… <span style="color: #4F6B4A">{{ checkB }}</span></p>
+            <p style="{{ styleProcC }}">Montando el informe para {{ destName }}… <span style="color: #4F6B4A">{{ checkC }}</span></p>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.4 INFORME GENERADO -->
+      <sc-if value="{{ isInforme }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Informe generado">
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #8C9689; text-transform: uppercase; margin: 0 0 10px">Nuevo informe · Paso 3 de 3</p>
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 28px">Tu informe está listo</h1>
+          <div style="display: grid; grid-template-columns: 56fr 44fr; gap: 50px; align-items: start; max-width: 960px">
+            <div style="position: relative">
+              <div style="position: relative; background: #F2EEE0; color: #241F16; border-radius: 12px 5px 10px 6px; transform: rotate(-0.7deg); box-shadow: 0 18px 44px rgba(15,10,4,0.45); padding: 36px 40px 32px; box-sizing: border-box">
+                <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #7C7368; margin: 0 0 6px; text-transform: uppercase">Informe de huella de carbono · Ejercicio 2026</p>
+                <p style="font-family: Fraunces, serif; font-size: 25px; font-weight: 600; margin: 0 0 20px">Talleres Mecánicos Rovira, S.L.</p>
+                <div style="display: grid; grid-template-columns: 1fr auto; row-gap: 12px; border-top: 1px solid #D8D0BC; padding-top: 18px; font-size: 15px">
+                  <span>Alcance 1 · Combustión directa</span><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 500">4,2 t CO₂e</span>
+                  <span>Alcance 2 · Electricidad</span><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 500">1,8 t CO₂e</span>
+                  <span style="color: #7C7368">Alcance 3 · Estimación</span><span style="font-family: 'IBM Plex Mono', monospace; color: #7C7368">12,6 t CO₂e</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 2px solid #241F16; margin-top: 16px; padding-top: 13px">
+                  <span style="font-weight: 600; font-size: 15px">Total</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 24px">18,6 t CO₂e</span>
+                </div>
+                <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #7C7368; margin: 20px 0 0">Factores de emisión MITECO 2026 · Metodología GHG Protocol</p>
+                <div style="{{ styleStamp }}">
+                  <svg width="150" height="150" viewBox="0 0 172 172" aria-hidden="true">
+                    <defs>
+                      <path id="app-ring" d="M 86,86 m -63,0 a 63,63 0 1,1 126,0 a 63,63 0 1,1 -126,0"></path>
+                    </defs>
+                    <circle cx="86" cy="86" r="77" fill="none" stroke="#4F6B4A" stroke-width="3" stroke-dasharray="468 8" transform="rotate(16 86 86)"></circle>
+                    <circle cx="87" cy="85" r="75" fill="none" stroke="#4F6B4A" stroke-width="1.1" opacity="0.5"></circle>
+                    <circle cx="86" cy="86" r="49" fill="none" stroke="#4F6B4A" stroke-width="1.6"></circle>
+                    <text fill="#4F6B4A" font-family="'IBM Plex Mono', monospace" font-size="12" letter-spacing="3.2" font-weight="500">
+                      <textPath href="#app-ring" startOffset="2">LISTO PARA TU CLIENTE · SELLIUM ·</textPath>
+                    </text>
+                    <text x="86" y="92" text-anchor="middle" font-family="Fraunces, serif" font-size="14" font-weight="600" fill="#4F6B4A">{{ destName }}</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 10px">
+              <button style="background: #B8763A; color: #1C2620; font-weight: 600; font-size: 16px; padding: 15px 24px; border: none; border-radius: 9px 5px 10px 6px; cursor: pointer; text-align: left" style-hover="background: #A6682F">↓ Descargar el PDF</button>
+              <button style="background: transparent; color: #F2EEE0; font-weight: 500; font-size: 15px; padding: 14px 24px; border: 1px solid rgba(140,150,137,0.45); border-radius: 6px 9px 5px 8px; cursor: pointer; text-align: left" style-hover="border-color: #B8763A">Enviar por email a mi contacto de {{ destName }}</button>
+              <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8C9689; line-height: 1.6; margin: 10px 0 0">El PDF va en formato formal, sin adornos — pensado para pasar sin extrañeza por un departamento de compras.</p>
+              <button onClick="{{ goHistorial }}" style="background: transparent; border: none; color: #C98F55; font-size: 14.5px; cursor: pointer; padding: 0; text-align: left" style-hover="color: #B8763A">Ver en el historial →</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.5 HISTORIAL -->
+      <sc-if value="{{ isHistorial }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Historial">
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 8px">Historial</h1>
+          <p style="font-size: 15.5px; color: #8C9689; margin: 0 0 30px">Todos los informes generados, agrupados por cliente gestionado.</p>
+          <div style="background: #F2EEE0; color: #241F16; border-radius: 10px 5px 11px 6px; transform: rotate(-0.3deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 10px 30px; box-sizing: border-box; max-width: 860px">
+            <sc-for list="{{ historial }}" as="h" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 20px; padding: 16px 0; border-top: 1px solid #E4DECC">
+                <div style="flex: 1">
+                  <p style="font-family: Fraunces, serif; font-size: 17px; font-weight: 600; margin: 0">{{ h.cliente }}</p>
+                  <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C7368; margin: 3px 0 0">{{ h.archivo }}</p>
+                </div>
+                <span style="font-size: 13.5px; color: #4A443A; min-width: 150px">para {{ h.destinatario }}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C7368; min-width: 80px">{{ h.fecha }}</span>
+                <span style="{{ h.chipStyle }}">{{ h.estado }}</span>
+                <a href="#" style="font-size: 13.5px; font-weight: 500">Descargar</a>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.6 PANEL GESTORÍA -->
+      <sc-if value="{{ isPanel }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Panel de clientes">
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 8px">Panel de clientes</h1>
+          <p style="font-size: 15.5px; color: #8C9689; margin: 0 0 12px; max-width: 62ch">El estado de cada cliente y un enlace de subida para no perseguir facturas por email.</p>
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #C7CCC2; margin: 0 0 26px">{{ panelResumen }}</p>
+          <div style="background: #F2EEE0; color: #241F16; border-radius: 9px 6px 10px 5px; transform: rotate(0.3deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 10px 30px; box-sizing: border-box; max-width: 860px">
+            <sc-for list="{{ clientes }}" as="c" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; gap: 20px; padding: 15px 0; border-top: 1px solid #E4DECC">
+                <div style="flex: 1">
+                  <p style="font-size: 15.5px; font-weight: 500; margin: 0">{{ c.nombre }}</p>
+                  <p style="font-size: 13px; color: #7C7368; margin: 2px 0 0">pide: {{ c.destinatario }}</p>
+                </div>
+                <span style="{{ c.chipStyle }}">{{ c.estado }}</span>
+                <button onClick="{{ c.solicitar }}" style="{{ c.btnStyle }}">{{ c.btnLabel }}</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.7 PLANES -->
+      <sc-if value="{{ isPlanes }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Planes">
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 8px">Plan y facturación</h1>
+          <p style="font-size: 15.5px; color: #8C9689; margin: 0 0 30px">Sin permanencia. Cambias o lo dejas cuando quieras.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: start; max-width: 820px">
+            <div style="background: #F2EEE0; color: #241F16; border-radius: 10px 5px 11px 6px; transform: rotate(-0.5deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 30px 30px; box-sizing: border-box">
+              <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #7C7368; text-transform: uppercase; margin: 0 0 14px">Informe único</p>
+              <p style="margin: 0 0 4px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 44px; font-weight: 500">149&nbsp;€</span></p>
+              <p style="font-size: 13.5px; color: #7C7368; margin: 0 0 18px">pago único · IVA incluido</p>
+              <p style="font-size: 14px; line-height: 1.5; color: #4A443A; margin: 0">Para quien lo necesita una vez al año. Alcances 1 y 2 + estimación de Alcance 3, con cambios incluidos y sin permanencia.</p>
+            </div>
+            <div style="position: relative; background: #F2EEE0; color: #241F16; border-radius: 5px 11px 6px 10px; transform: rotate(0.5deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 30px 30px; box-sizing: border-box; margin-top: 18px; border: 2px solid #B8763A">
+              <span style="position: absolute; top: -12px; right: 22px; background: #B8763A; color: #1C2620; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; padding: 4px 12px; border-radius: 5px 3px 6px 3px">TU PLAN</span>
+              <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #7C7368; text-transform: uppercase; margin: 0 0 14px">Plan gestoría</p>
+              <p style="margin: 0 0 4px"><span style="font-size: 17px; color: #7C7368; font-family: 'IBM Plex Mono', monospace">desde</span> <span style="font-family: 'IBM Plex Mono', monospace; font-size: 44px; font-weight: 500">29&nbsp;€</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 18px; color: #7C7368">/mes</span></p>
+              <p style="font-size: 13.5px; color: #7C7368; margin: 0 0 18px">al mes · informes a precio por volumen</p>
+              <p style="font-size: 14px; line-height: 1.5; color: #4A443A; margin: 0">Panel multi-cliente, recordatorios automáticos, enlaces de subida y precio por volumen.</p>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isEn }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; min-height: 100vh; min-width: 1100px; background: #1C2620">
+
+  <!-- TOP BAR -->
+  <div data-screen-label="EN Topbar" style="display: flex; align-items: center; justify-content: space-between; padding: 16px 32px; border-bottom: 1px solid rgba(140,150,137,0.22)">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true">
+        <circle cx="17" cy="17" r="14.5" fill="none" stroke="#B8763A" stroke-width="2" stroke-dasharray="86 4" transform="rotate(20 17 17)"></circle>
+        <circle cx="17.6" cy="16.5" r="13.6" fill="none" stroke="#B8763A" stroke-width="0.9" opacity="0.5"></circle>
+        <text x="17" y="22.5" text-anchor="middle" font-family="Fraunces, serif" font-size="16" font-weight="700" fill="#B8763A">S</text>
+      </svg>
+      <span style="font-family: Fraunces, serif; font-weight: 600; font-size: 19px">Sellium</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px">
+      <div style="display: flex; gap: 2px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; border: 1px solid rgba(140,150,137,0.4); border-radius: 6px 4px 7px 4px; overflow: hidden"><button onClick="{{ setEs }}" style="{{ styleEsBtn }}">ES</button><button onClick="{{ setEn }}" style="{{ styleEnBtn }}">EN</button></div>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 1px; color: #8C9689; border: 1px solid rgba(140,150,137,0.35); border-radius: 5px 3px 6px 3px; padding: 4px 10px; white-space: nowrap">ACCOUNTANCY PLAN</span>
+      <span style="font-size: 14px; color: #C7CCC2">Asesoría Ficticia, S.L.P.</span>
+      <div style="width: 34px; height: 34px; border-radius: 50%; background: #4F6B4A; color: #F2EEE0; display: flex; align-items: center; justify-content: center; font-family: Fraunces, serif; font-weight: 600; font-size: 15px">A</div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex: 1">
+
+    <!-- SIDEBAR -->
+    <div data-screen-label="EN Sidebar" style="width: 232px; flex-shrink: 0; border-right: 1px solid rgba(140,150,137,0.22); padding: 26px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px">
+      <button onClick="{{ goSubida }}" style="{{ styleNavNuevo }}">+ New report</button>
+      <button onClick="{{ goHistorial }}" style="{{ styleNavHistorial }}">History</button>
+      <button onClick="{{ goPanel }}" style="{{ styleNavPanel }}">Client panel</button>
+      <button onClick="{{ goPlanes }}" style="{{ styleNavPlanes }}">Plan &amp; billing</button>
+    </div>
+
+    <!-- MAIN -->
+    <div style="flex: 1; padding: 44px 56px 80px; box-sizing: border-box; max-width: 1000px">
+
+      <!-- 4.1 SUBIDA -->
+      <sc-if value="{{ isSubida }}" hint-placeholder-val="{{ true }}">
+        <div data-screen-label="EN Subida de facturas">
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #8C9689; text-transform: uppercase; margin: 0 0 10px">New report · Step 1 of 3</p>
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 28px">Upload your bills</h1>
+          <div style="background: #F2EEE0; color: #241F16; border-radius: 11px 5px 9px 6px; transform: rotate(-0.4deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 34px 38px; box-sizing: border-box; max-width: 760px">
+            <div style="border: 1.5px dashed #A89E88; border-radius: 9px 6px 10px 5px; padding: 36px 32px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center">
+              <svg width="38" height="46" viewBox="0 0 38 46" aria-hidden="true">
+                <rect x="2" y="2" width="34" height="42" rx="3" fill="none" stroke="#7C7368" stroke-width="1.8"></rect>
+                <line x1="9" y1="12" x2="29" y2="12" stroke="#7C7368" stroke-width="1.8"></line>
+                <line x1="9" y1="19" x2="29" y2="19" stroke="#7C7368" stroke-width="1.8"></line>
+                <line x1="9" y1="26" x2="22" y2="26" stroke="#7C7368" stroke-width="1.8"></line>
+                <line x1="9" y1="35" x2="29" y2="35" stroke="#B8763A" stroke-width="2.4"></line>
+              </svg>
+              <p style="font-size: 16.5px; font-weight: 500; margin: 0; max-width: 46ch">Drag in your electricity, gas or fuel bills from the last year</p>
+              <p style="font-size: 14px; color: #7C7368; margin: 0">Photos and PDFs both work, however you have them.</p>
+              <button onClick="{{ addFile }}" style="background: #B8763A; color: #1C2620; font-weight: 600; font-size: 15px; padding: 11px 22px; border: none; border-radius: 8px 5px 9px 5px; cursor: pointer; margin-top: 6px" style-hover="background: #A6682F">Choose files</button>
+              <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C7368; margin: 4px 0 0">on mobile you can simply photograph them</p>
+            </div>
+            <div style="display: flex; flex-direction: column; margin-top: 22px">
+              <sc-for list="{{ files }}" as="f" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 14px; padding: 11px 4px; border-top: 1px solid #E4DECC">
+                  <div style="width: 30px; height: 38px; background: #FBF8EF; border: 1px solid #D8D0BC; border-radius: 2px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding: 7px 5px; box-sizing: border-box"><div style="height: 2px; background: #B8763A; width: 60%"></div><div style="height: 2px; background: #C4BCA8"></div><div style="height: 2px; background: #C4BCA8; width: 70%"></div></div>
+                  <span style="font-size: 14.5px; font-weight: 500; flex: 1">{{ f.name }}</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C7368">{{ f.size }}</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #4F6B4A">READ ✓</span>
+                  <button onClick="{{ f.remove }}" style="background: transparent; border: none; color: #7C7368; font-size: 16px; cursor: pointer; padding: 2px 6px" style-hover="color: #9C3B3B">×</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: flex-end; max-width: 760px; margin-top: 26px">
+            <button onClick="{{ goDest }}" style="background: #B8763A; color: #1C2620; font-weight: 600; font-size: 16px; padding: 14px 26px; border: none; border-radius: 9px 5px 10px 6px; cursor: pointer" style-hover="background: #A6682F">Next: who is it for? →</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.2 DESTINATARIO -->
+      <sc-if value="{{ isDest }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="EN Seleccion de destinatario">
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #8C9689; text-transform: uppercase; margin: 0 0 10px">New report · Step 2 of 3</p>
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 14px">Which client is this report for?</h1>
+          <p style="font-size: 16px; color: #C7CCC2; margin: 0 0 30px; max-width: 58ch; line-height: 1.55">The report carries your client&#39;s name and is refined together with you — not a generic PDF with your data filled in.</p>
+          <div style="background: #F2EEE0; color: #241F16; border-radius: 9px 6px 11px 5px; transform: rotate(0.4deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 30px 34px; box-sizing: border-box; max-width: 620px">
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <sc-for list="{{ destOptions }}" as="opt" hint-placeholder-count="3">
+                <button onClick="{{ opt.select }}" style="{{ opt.style }}">
+                  <span style="{{ opt.dotStyle }}"></span>
+                  <span style="flex: 1; text-align: left">{{ opt.name }}</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #7C7368">{{ opt.hint }}</span>
+                </button>
+              </sc-for>
+              <input value="{{ customDest }}" onInput="{{ onCustomDest }}" placeholder="Other: type your client&#39;s name…" style="font-family: 'IBM Plex Sans', sans-serif; font-size: 15px; padding: 13px 16px; border: 1.5px solid #C4BCA8; border-radius: 6px 4px 7px 4px; background: #FBF8EF; color: #241F16; outline: none" style-focus="border-color: #B8763A">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; max-width: 620px; margin-top: 26px">
+            <button onClick="{{ goSubida }}" style="background: transparent; border: none; color: #8C9689; font-size: 15px; cursor: pointer; padding: 0" style-hover="color: #F2EEE0">← Back to bills</button>
+            <button onClick="{{ startProc }}" style="background: #B8763A; color: #1C2620; font-weight: 600; font-size: 16px; padding: 14px 26px; border: none; border-radius: 9px 5px 10px 6px; cursor: pointer" style-hover="background: #A6682F">Generate the report</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.3 PROCESANDO -->
+      <sc-if value="{{ isProc }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="EN Procesando" style="display: flex; flex-direction: column; align-items: center; padding-top: 70px">
+          <svg width="64" height="64" viewBox="0 0 64 64" style="animation: sellium-spin 2.6s linear infinite" aria-hidden="true">
+            <circle cx="32" cy="32" r="27" fill="none" stroke="#B8763A" stroke-width="2.6" stroke-dasharray="150 20"></circle>
+            <circle cx="32.8" cy="31.4" r="25.5" fill="none" stroke="#B8763A" stroke-width="1" opacity="0.45"></circle>
+          </svg>
+          <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 44px; font-family: 'IBM Plex Mono', monospace; font-size: 15px; min-width: 480px">
+            <p style="{{ styleProcA }}">Reading your {{ fileCount }} bills… <span style="color: #4F6B4A">{{ checkA }}</span></p>
+            <p style="{{ styleProcB }}">Calculating with official MITECO factors… <span style="color: #4F6B4A">{{ checkB }}</span></p>
+            <p style="{{ styleProcC }}">Assembling the report for {{ destName }}… <span style="color: #4F6B4A">{{ checkC }}</span></p>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.4 INFORME GENERADO -->
+      <sc-if value="{{ isInforme }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="EN Informe generado">
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #8C9689; text-transform: uppercase; margin: 0 0 10px">New report · Step 3 of 3</p>
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 28px">Your report is ready</h1>
+          <div style="display: grid; grid-template-columns: 56fr 44fr; gap: 50px; align-items: start; max-width: 960px">
+            <div style="position: relative">
+              <div style="position: relative; background: #F2EEE0; color: #241F16; border-radius: 12px 5px 10px 6px; transform: rotate(-0.7deg); box-shadow: 0 18px 44px rgba(15,10,4,0.45); padding: 36px 40px 32px; box-sizing: border-box">
+                <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #7C7368; margin: 0 0 6px; text-transform: uppercase">Carbon footprint report · FY 2026</p>
+                <p style="font-family: Fraunces, serif; font-size: 25px; font-weight: 600; margin: 0 0 20px">Talleres Mecánicos Rovira, S.L.</p>
+                <div style="display: grid; grid-template-columns: 1fr auto; row-gap: 12px; border-top: 1px solid #D8D0BC; padding-top: 18px; font-size: 15px">
+                  <span>Scope 1 · Direct combustion</span><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 500">4.2 t CO₂e</span>
+                  <span>Scope 2 · Electricity</span><span style="font-family: 'IBM Plex Mono', monospace; font-weight: 500">1.8 t CO₂e</span>
+                  <span style="color: #7C7368">Scope 3 · Estimate</span><span style="font-family: 'IBM Plex Mono', monospace; color: #7C7368">12.6 t CO₂e</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; border-top: 2px solid #241F16; margin-top: 16px; padding-top: 13px">
+                  <span style="font-weight: 600; font-size: 15px">Total</span>
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 24px">18.6 t CO₂e</span>
+                </div>
+                <p style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #7C7368; margin: 20px 0 0">MITECO 2026 emission factors · GHG Protocol methodology</p>
+                <div style="{{ styleStamp }}">
+                  <svg width="150" height="150" viewBox="0 0 172 172" aria-hidden="true">
+                    <defs>
+                      <path id="app-ring" d="M 86,86 m -63,0 a 63,63 0 1,1 126,0 a 63,63 0 1,1 -126,0"></path>
+                    </defs>
+                    <circle cx="86" cy="86" r="77" fill="none" stroke="#4F6B4A" stroke-width="3" stroke-dasharray="468 8" transform="rotate(16 86 86)"></circle>
+                    <circle cx="87" cy="85" r="75" fill="none" stroke="#4F6B4A" stroke-width="1.1" opacity="0.5"></circle>
+                    <circle cx="86" cy="86" r="49" fill="none" stroke="#4F6B4A" stroke-width="1.6"></circle>
+                    <text fill="#4F6B4A" font-family="'IBM Plex Mono', monospace" font-size="12" letter-spacing="3.2" font-weight="500">
+                      <textPath href="#app-ring" startOffset="2">READY FOR YOUR CLIENT · SELLIUM ·</textPath>
+                    </text>
+                    <text x="86" y="92" text-anchor="middle" font-family="Fraunces, serif" font-size="14" font-weight="600" fill="#4F6B4A">{{ destName }}</text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 10px">
+              <button style="background: #B8763A; color: #1C2620; font-weight: 600; font-size: 16px; padding: 15px 24px; border: none; border-radius: 9px 5px 10px 6px; cursor: pointer; text-align: left" style-hover="background: #A6682F">↓ Download the PDF</button>
+              <button style="background: transparent; color: #F2EEE0; font-weight: 500; font-size: 15px; padding: 14px 24px; border: 1px solid rgba(140,150,137,0.45); border-radius: 6px 9px 5px 8px; cursor: pointer; text-align: left" style-hover="border-color: #B8763A">Email it to my contact at {{ destName }}</button>
+              <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8C9689; line-height: 1.6; margin: 10px 0 0">The PDF is formal and unadorned — built to pass a procurement review without raising eyebrows.</p>
+              <button onClick="{{ goHistorial }}" style="background: transparent; border: none; color: #C98F55; font-size: 14.5px; cursor: pointer; padding: 0; text-align: left" style-hover="color: #B8763A">View in history →</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.5 HISTORIAL -->
+      <sc-if value="{{ isHistorial }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="EN Historial">
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 8px">History</h1>
+          <p style="font-size: 15.5px; color: #8C9689; margin: 0 0 30px">Every generated report, grouped by managed client.</p>
+          <div style="background: #F2EEE0; color: #241F16; border-radius: 10px 5px 11px 6px; transform: rotate(-0.3deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 10px 30px; box-sizing: border-box; max-width: 860px">
+            <sc-for list="{{ historial }}" as="h" hint-placeholder-count="4">
+              <div style="display: flex; align-items: center; gap: 20px; padding: 16px 0; border-top: 1px solid #E4DECC">
+                <div style="flex: 1">
+                  <p style="font-family: Fraunces, serif; font-size: 17px; font-weight: 600; margin: 0">{{ h.cliente }}</p>
+                  <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C7368; margin: 3px 0 0">{{ h.archivo }}</p>
+                </div>
+                <span style="font-size: 13.5px; color: #4A443A; min-width: 150px">for {{ h.destinatario }}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #7C7368; min-width: 80px">{{ h.fecha }}</span>
+                <span style="{{ h.chipStyle }}">{{ h.estadoEn }}</span>
+                <a href="#" style="font-size: 13.5px; font-weight: 500">Download</a>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.6 PANEL GESTORÍA -->
+      <sc-if value="{{ isPanel }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="EN Panel de clientes">
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 8px">Client panel</h1>
+          <p style="font-size: 15.5px; color: #8C9689; margin: 0 0 12px; max-width: 62ch">Each client&#39;s status and an upload link so you never chase bills by email.</p>
+          <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #C7CCC2; margin: 0 0 26px">{{ panelResumenEn }}</p>
+          <div style="background: #F2EEE0; color: #241F16; border-radius: 9px 6px 10px 5px; transform: rotate(0.3deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 10px 30px; box-sizing: border-box; max-width: 860px">
+            <sc-for list="{{ clientes }}" as="c" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; gap: 20px; padding: 15px 0; border-top: 1px solid #E4DECC">
+                <div style="flex: 1">
+                  <p style="font-size: 15.5px; font-weight: 500; margin: 0">{{ c.nombre }}</p>
+                  <p style="font-size: 13px; color: #7C7368; margin: 2px 0 0">asks: {{ c.destinatario }}</p>
+                </div>
+                <span style="{{ c.chipStyle }}">{{ c.estadoEn }}</span>
+                <button onClick="{{ c.solicitar }}" style="{{ c.btnStyle }}">{{ c.btnLabelEn }}</button>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- 4.7 PLANES -->
+      <sc-if value="{{ isPlanes }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="EN Planes">
+          <h1 style="font-family: Fraunces, serif; font-size: 36px; font-weight: 600; margin: 0 0 8px">Plan &amp; billing</h1>
+          <p style="font-size: 15.5px; color: #8C9689; margin: 0 0 30px">No commitment. Change or cancel whenever you like.</p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 34px; align-items: start; max-width: 820px">
+            <div style="background: #F2EEE0; color: #241F16; border-radius: 10px 5px 11px 6px; transform: rotate(-0.5deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 30px 30px; box-sizing: border-box">
+              <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #7C7368; text-transform: uppercase; margin: 0 0 14px">Single report</p>
+              <p style="margin: 0 0 4px"><span style="font-family: 'IBM Plex Mono', monospace; font-size: 44px; font-weight: 500">€149</span></p>
+              <p style="font-size: 13.5px; color: #7C7368; margin: 0 0 18px">one-time payment · VAT included</p>
+              <p style="font-size: 14px; line-height: 1.5; color: #4A443A; margin: 0">For SMEs that need it once a year. Scopes 1 &amp; 2 + a Scope 3 estimate, revisions included, no commitment.</p>
+            </div>
+            <div style="position: relative; background: #F2EEE0; color: #241F16; border-radius: 5px 11px 6px 10px; transform: rotate(0.5deg); box-shadow: 0 16px 38px rgba(15,10,4,0.42); padding: 30px 30px; box-sizing: border-box; margin-top: 18px; border: 2px solid #B8763A">
+              <span style="position: absolute; top: -12px; right: 22px; background: #B8763A; color: #1C2620; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 1px; padding: 4px 12px; border-radius: 5px 3px 6px 3px">YOUR PLAN</span>
+              <p style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 2px; color: #7C7368; text-transform: uppercase; margin: 0 0 14px">Accountancy plan</p>
+              <p style="margin: 0 0 4px"><span style="font-size: 17px; color: #7C7368; font-family: 'IBM Plex Mono', monospace">from</span> <span style="font-family: 'IBM Plex Mono', monospace; font-size: 44px; font-weight: 500">€29</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 18px; color: #7C7368">/mo</span></p>
+              <p style="font-size: 13.5px; color: #7C7368; margin: 0 0 18px">per month · volume pricing on reports</p>
+              <p style="font-size: 14px; line-height: 1.5; color: #4A443A; margin: 0">Multi-client panel, automatic reminders, upload links and volume pricing.</p>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+class Component extends DCLogic {
+  state = {
+    lang: 'es',
+    screen: 'subida',
+    files: [
+      { name: 'factura_luz_ene-jun.pdf', size: '1,2 MB' },
+      { name: 'factura_gasoil_2025.jpg', size: '3,4 MB' },
+      { name: 'factura_gas_1T.pdf', size: '0,8 MB' }
+    ],
+    dest: 'Grupo Altavera',
+    customDest: '',
+    procTick: 0,
+    stampOn: false,
+    solicitados: {}
+  };
+
+  componentWillUnmount() {
+    clearInterval(this._proc);
+    clearTimeout(this._stamp);
+  }
+
+  startProc = () => {
+    this.setState({ screen: 'procesando', procTick: 0, stampOn: false });
+    clearInterval(this._proc);
+    this._proc = setInterval(() => {
+      this.setState(s => {
+        if (s.procTick >= 8) {
+          clearInterval(this._proc);
+          this._stamp = setTimeout(() => this.setState({ stampOn: true }), 400);
+          return { screen: 'informe', procTick: s.procTick };
+        }
+        return { procTick: s.procTick + 1 };
+      });
+    }, 650);
+  };
+
+  renderVals() {
+    const s = this.state;
+    const destName = s.customDest.trim() || s.dest;
+    const t = s.procTick;
+
+    const langBase = { fontFamily: "'IBM Plex Mono', monospace", fontSize: '12.5px', padding: '6px 11px', border: 'none', cursor: 'pointer', background: 'transparent', color: '#8C9689' };
+    const langActive = { ...langBase, background: '#B8763A', color: '#1C2620', fontWeight: 500 };
+    const navBase = {
+      display: 'block', width: '100%', textAlign: 'left', background: 'transparent',
+      border: 'none', cursor: 'pointer', color: '#C7CCC2', fontSize: '15px',
+      fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500,
+      padding: '11px 14px', borderRadius: '7px 4px 8px 5px'
+    };
+    const navActive = { ...navBase, background: 'rgba(184,118,58,0.14)', color: '#F2EEE0', boxShadow: 'inset 2px 0 0 #B8763A' };
+    const inNuevo = ['subida', 'dest', 'procesando', 'informe'].includes(s.screen);
+
+    const optBase = {
+      display: 'flex', alignItems: 'center', gap: '14px', width: '100%',
+      background: '#FBF8EF', border: '1.5px solid #C4BCA8', borderRadius: '6px 4px 7px 4px',
+      padding: '13px 16px', fontSize: '15px', fontFamily: "'IBM Plex Sans', sans-serif",
+      color: '#241F16', cursor: 'pointer', boxSizing: 'border-box'
+    };
+    const dot = (sel) => ({
+      width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0, boxSizing: 'border-box',
+      border: sel ? '5px solid #B8763A' : '1.5px solid #A89E88', background: '#FBF8EF'
+    });
+    const destOptions = [
+      { name: 'Grupo Altavera', hint: '' },
+      { name: 'Constructora Ibérica, S.A.', hint: '' },
+      { name: 'Distribuciones Áncora', hint: '' }
+    ].map(o => {
+      const sel = !s.customDest.trim() && s.dest === o.name;
+      return {
+        ...o,
+        select: () => this.setState({ dest: o.name, customDest: '' }),
+        style: sel ? { ...optBase, border: '1.5px solid #B8763A', background: '#F7EFDF' } : optBase,
+        dotStyle: dot(sel)
+      };
+    });
+
+    const procStyle = (on) => ({ margin: 0, color: on ? '#F2EEE0' : '#8C9689', transition: 'color 0.3s' });
+
+    const chip = (color, border) => ({
+      fontFamily: "'IBM Plex Mono', monospace", fontSize: '11.5px', letterSpacing: '0.5px',
+      color: color, border: '1px solid ' + border, borderRadius: '5px 3px 6px 3px',
+      padding: '3px 10px', minWidth: '74px', textAlign: 'center'
+    });
+    const chips = {
+      ENVIADO: chip('#B8763A', '#B8763A'),
+      LISTO: chip('#4F6B4A', '#4F6B4A'),
+      BORRADOR: chip('#7C7368', '#C4BCA8'),
+      'SIN FACTURAS': chip('#9C3B3B', '#D0A8A8')
+    };
+
+    const estadosEn = { ENVIADO: 'SENT', LISTO: 'READY', BORRADOR: 'DRAFT', 'SIN FACTURAS': 'NO BILLS' };
+    const historial = [
+      { cliente: 'Talleres Rovira, S.L.', archivo: 'Informe_2026_GrupoAltavera.pdf', destinatario: 'Grupo Altavera', fecha: '11 jul 2026', estado: 'LISTO' },
+      { cliente: 'Talleres Rovira, S.L.', archivo: 'Informe_2025_GrupoAltavera.pdf', destinatario: 'Grupo Altavera', fecha: '02 jun 2025', estado: 'ENVIADO' },
+      { cliente: 'Imprenta Solvent', archivo: 'Informe_2026_ConstIberica.pdf', destinatario: 'Constructora Ibérica', fecha: '28 jun 2026', estado: 'ENVIADO' },
+      { cliente: 'Transportes Nadal', archivo: 'Informe_2026_DistAncora.pdf', destinatario: 'Distribuciones Áncora', fecha: '—', estado: 'BORRADOR' }
+    ].map(h => ({ ...h, chipStyle: chips[h.estado], estadoEn: estadosEn[h.estado] }));
+
+    const btnSolicitar = {
+      background: 'transparent', border: '1.5px solid #241F16', color: '#241F16',
+      fontWeight: 600, fontSize: '13px', padding: '8px 14px', borderRadius: '5px 8px 5px 7px',
+      cursor: 'pointer', fontFamily: "'IBM Plex Sans', sans-serif", minWidth: '150px'
+    };
+    const btnEnviado = { ...btnSolicitar, border: '1.5px solid transparent', color: '#4F6B4A', cursor: 'default', fontWeight: 500 };
+
+    const clientesData = [
+      { nombre: 'Talleres Rovira, S.L.', destinatario: 'Grupo Altavera', estado: 'LISTO' },
+      { nombre: 'Imprenta Solvent', destinatario: 'Constructora Ibérica', estado: 'ENVIADO' },
+      { nombre: 'Transportes Nadal', destinatario: 'Distribuciones Áncora', estado: 'BORRADOR' },
+      { nombre: 'Limpiezas Ordax', destinatario: 'Grupo Altavera', estado: 'SIN FACTURAS' },
+      { nombre: 'Metalúrgica Sanz', destinatario: 'Constructora Ibérica', estado: 'SIN FACTURAS' }
+    ];
+    const clientes = clientesData.map((c, i) => {
+      const sinFacturas = c.estado === 'SIN FACTURAS';
+      const enviado = !!s.solicitados[i];
+      return {
+        ...c,
+        chipStyle: chips[c.estado],
+        estadoEn: estadosEn[c.estado],
+        solicitar: sinFacturas && !enviado
+          ? () => this.setState(st => ({ solicitados: { ...st.solicitados, [i]: true } }))
+          : () => {},
+        btnLabel: sinFacturas ? (enviado ? 'Enlace enviado ✓' : 'Solicitar facturas') : ' ',
+        btnLabelEn: sinFacturas ? (enviado ? 'Link sent ✓' : 'Request bills') : ' ',
+        btnStyle: sinFacturas ? (enviado ? btnEnviado : btnSolicitar) : { ...btnSolicitar, visibility: 'hidden' }
+      };
+    });
+    const listos = clientesData.filter(c => c.estado === 'LISTO' || c.estado === 'ENVIADO').length;
+
+    return {
+      isEs: s.lang !== 'en',
+      isEn: s.lang === 'en',
+      setEs: () => this.setState({ lang: 'es' }),
+      setEn: () => this.setState({ lang: 'en' }),
+      styleEsBtn: s.lang === 'en' ? langBase : langActive,
+      styleEnBtn: s.lang === 'en' ? langActive : langBase,
+      isSubida: s.screen === 'subida',
+      isDest: s.screen === 'dest',
+      isProc: s.screen === 'procesando',
+      isInforme: s.screen === 'informe',
+      isHistorial: s.screen === 'historial',
+      isPanel: s.screen === 'panel',
+      isPlanes: s.screen === 'planes',
+
+      goSubida: () => this.setState({ screen: 'subida' }),
+      goDest: () => this.setState({ screen: 'dest' }),
+      goHistorial: () => this.setState({ screen: 'historial' }),
+      goPanel: () => this.setState({ screen: 'panel' }),
+      goPlanes: () => this.setState({ screen: 'planes' }),
+      startProc: this.startProc,
+
+      styleNavNuevo: inNuevo ? navActive : navBase,
+      styleNavHistorial: s.screen === 'historial' ? navActive : navBase,
+      styleNavPanel: s.screen === 'panel' ? navActive : navBase,
+      styleNavPlanes: s.screen === 'planes' ? navActive : navBase,
+
+      files: s.files.map((f, i) => ({
+        ...f,
+        remove: () => this.setState(st => ({ files: st.files.filter((_, j) => j !== i) }))
+      })),
+      addFile: () => this.setState(st => ({
+        files: [...st.files, { name: 'factura_luz_jul-dic.pdf', size: '1,1 MB' }]
+      })),
+      fileCount: s.files.length,
+
+      destOptions: destOptions,
+      customDest: s.customDest,
+      onCustomDest: (e) => this.setState({ customDest: e.target.value }),
+      destName: destName,
+
+      styleProcA: procStyle(t >= 3),
+      styleProcB: procStyle(t >= 6),
+      styleProcC: procStyle(t >= 8),
+      checkA: t >= 3 ? '✓' : '',
+      checkB: t >= 6 ? '✓' : '',
+      checkC: t >= 8 ? '✓' : '',
+
+      styleStamp: {
+        position: 'absolute', top: '-30px', right: '-26px',
+        opacity: s.stampOn ? 0.93 : 0,
+        transform: s.stampOn ? 'scale(1) rotate(-9deg)' : 'scale(1.7) rotate(-9deg)',
+        transition: 'opacity 0.3s, transform 0.4s cubic-bezier(0.2, 1.6, 0.4, 1)'
+      },
+
+      historial: historial,
+      clientes: clientes,
+      panelResumen: clientesData.length + ' CLIENTES · ' + listos + ' INFORMES LISTOS O ENVIADOS · 2 SIN FACTURAS',
+      panelResumenEn: clientesData.length + ' CLIENTS · ' + listos + ' REPORTS READY OR SENT · 2 AWAITING BILLS'
+    };
+  }
+}
+</script>
+</body>
+</html>

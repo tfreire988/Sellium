@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>Sellium — Demo en 40 segundos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html, body { margin: 0; padding: 0; background: #10160F; }
+    body { font-family: 'IBM Plex Sans', sans-serif; color: #F2EEE0; }
+    a { color: #C98F55; text-decoration: none; }
+    a:hover { color: #B8763A; text-decoration: underline; }
+  </style>
+</helmet>
+<div style="width: 100vw; height: 100vh">
+  <x-import component-from-global-scope="SelliumDemo" from="./animations.jsx ./sellium-demo-scene.jsx" hint-size="100%,100%"></x-import>
+</div>
+</x-dc>
+</body>
+</html>
