@@ -100,7 +100,7 @@ export default async function InformePage({
             <>
               <a
                 href={`/api/informes/${informe.id}/descargar`}
-                className="inline-block rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-[22px] py-3 text-[15px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline"
+                className="inline-block rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-cta px-[22px] py-3 text-[15px] font-semibold text-paper-2 no-underline hover:bg-cta-hover hover:text-paper-2 hover:no-underline"
               >
                 Descargar PDF
               </a>

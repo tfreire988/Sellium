@@ -82,7 +82,7 @@ export function EnviarInforme({
         <button
           type="submit"
           disabled={sending}
-          className="shrink-0 rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-5 py-2.5 text-[14px] font-semibold text-ink hover:bg-sello-hover disabled:opacity-50"
+          className="shrink-0 rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-cta px-5 py-2.5 text-[14px] font-semibold text-paper-2 hover:bg-cta-hover disabled:opacity-50"
         >
           {sending ? "Enviando…" : "Enviar"}
         </button>

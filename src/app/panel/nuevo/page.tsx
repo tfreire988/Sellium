@@ -308,7 +308,7 @@ export default function NuevoInformePage() {
                         <button
                           onClick={() => guardarManual(it)}
                           disabled={mSaving}
-                          className="rounded-[6px] bg-sello px-4 py-2 text-[13px] font-semibold text-ink hover:bg-sello-hover disabled:opacity-50"
+                          className="rounded-[6px] bg-cta px-4 py-2 text-[13px] font-semibold text-paper-2 hover:bg-cta-hover disabled:opacity-50"
                         >
                           {mSaving ? "Guardando…" : "Guardar"}
                         </button>
@@ -350,7 +350,7 @@ export default function NuevoInformePage() {
               <button
                 onClick={generar}
                 disabled={generando || trabajando || listas === 0}
-                className="rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-[22px] py-3 text-[15px] font-semibold text-ink hover:bg-sello-hover disabled:opacity-50"
+                className="rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-cta px-[22px] py-3 text-[15px] font-semibold text-paper-2 hover:bg-cta-hover disabled:opacity-50"
               >
                 {generando ? "Generando…" : "Generar informe"}
               </button>
