@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 const MITECO_URL =
-  "https://www.miteco.gob.es/es/cambio-climatico/temas/mitigacion-politicas-y-medidas/registro-huella.html";
+  "https://www.miteco.gob.es/es/cambio-climatico/temas/registro-huella.html";
 
 function fmt(n: number | null): string {
   if (n == null) return "—";
