@@ -5,6 +5,7 @@ export interface SiteCopy {
     howItWorks: string;
     pricing: string;
     accountants: string;
+    login: string;
     cta: string;
   };
   hero: {
@@ -128,6 +129,7 @@ export const copy: Record<Lang, SiteCopy> = {
       howItWorks: "Cómo funciona",
       pricing: "Precios",
       accountants: "Para gestorías",
+      login: "Entrar",
       cta: "Empezar mi informe",
     },
     hero: {
@@ -275,6 +277,7 @@ export const copy: Record<Lang, SiteCopy> = {
       howItWorks: "How it works",
       pricing: "Pricing",
       accountants: "For accountants",
+      login: "Log in",
       cta: "Start my report",
     },
     hero: {
