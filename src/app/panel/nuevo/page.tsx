@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { LogoMark, Wordmark } from "@/components/Logo";
-import type { TipoFactura } from "@/lib/db-types";
+import type { TipoFactura, Unidad } from "@/lib/db-types";
 
 type Estado = "subiendo" | "extrayendo" | "ok" | "revision_manual" | "error";
 
@@ -40,6 +40,55 @@ export default function NuevoInformePage() {
   const [cliente, setCliente] = useState("");
   const [generando, setGenerando] = useState(false);
   const [genError, setGenError] = useState<string | null>(null);
+
+  // Manual entry (used when reading isn't confident, or the AI key isn't set).
+  const [editKey, setEditKey] = useState<string | null>(null);
+  const [mConsumo, setMConsumo] = useState("");
+  const [mUnidad, setMUnidad] = useState<Unidad>("kWh");
+  const [mIni, setMIni] = useState("");
+  const [mFin, setMFin] = useState("");
+  const [mErr, setMErr] = useState<string | null>(null);
+  const [mSaving, setMSaving] = useState(false);
+
+  function abrirManual(it: Item) {
+    setEditKey(it.key);
+    setMConsumo("");
+    setMUnidad(it.tipo === "combustible" ? "litros" : "kWh");
+    setMIni("");
+    setMFin("");
+    setMErr(null);
+  }
+
+  async function guardarManual(it: Item) {
+    setMErr(null);
+    const consumo = Number(mConsumo.replace(",", "."));
+    if (!Number.isFinite(consumo) || consumo <= 0) {
+      setMErr("Consumo no válido.");
+      return;
+    }
+    setMSaving(true);
+    try {
+      const res = await fetch("/api/facturas/confirmar", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          facturaId: it.facturaId,
+          consumo,
+          unidad: mUnidad,
+          periodo_inicio: mIni,
+          periodo_fin: mFin,
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "No se pudo guardar");
+      patch(it.key, { estado: "ok", detalle: "Introducido a mano" });
+      setEditKey(null);
+    } catch (err) {
+      setMErr(err instanceof Error ? err.message : "Error");
+    } finally {
+      setMSaving(false);
+    }
+  }
 
   function patch(key: string, next: Partial<Item>) {
     setItems((prev) => prev.map((it) => (it.key === key ? { ...it, ...next } : it)));
@@ -192,25 +241,90 @@ export default function NuevoInformePage() {
         {/* Uploaded list */}
         {items.length > 0 ? (
           <div className="mb-8 flex flex-col gap-2">
-            {items.map((it) => (
-              <div
-                key={it.key}
-                className="flex items-center justify-between gap-3 rounded-tl-[8px] rounded-tr-[4px] rounded-br-[9px] rounded-bl-[4px] border border-ink-muted/20 bg-white/[0.02] px-4 py-3"
-              >
-                <div className="min-w-0">
-                  <p className="m-0 truncate text-[14px] text-ink-text">{it.nombre}</p>
-                  <p className="m-0 text-[12px] text-ink-muted">
-                    {TIPOS.find((t) => t.value === it.tipo)?.label}
-                    {it.detalle ? ` · ${it.detalle}` : ""}
-                  </p>
-                </div>
-                <span
-                  className={`shrink-0 rounded-tl-[5px] rounded-tr-[3px] rounded-br-[6px] rounded-bl-[3px] border px-2.5 py-1 font-mono text-[11px] ${BADGE[it.estado].cls}`}
+            {items.map((it) => {
+              const editable =
+                !!it.facturaId && (it.estado === "revision_manual" || it.estado === "error");
+              return (
+                <div
+                  key={it.key}
+                  className="rounded-tl-[8px] rounded-tr-[4px] rounded-br-[9px] rounded-bl-[4px] border border-ink-muted/20 bg-white/[0.02] px-4 py-3"
                 >
-                  {BADGE[it.estado].label}
-                </span>
-              </div>
-            ))}
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="m-0 truncate text-[14px] text-ink-text">{it.nombre}</p>
+                      <p className="m-0 text-[12px] text-ink-muted">
+                        {TIPOS.find((t) => t.value === it.tipo)?.label}
+                        {it.detalle ? ` · ${it.detalle}` : ""}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-3">
+                      {editable && editKey !== it.key ? (
+                        <button
+                          onClick={() => abrirManual(it)}
+                          className="font-mono text-[12px] text-sello hover:underline"
+                        >
+                          Introducir a mano
+                        </button>
+                      ) : null}
+                      <span
+                        className={`rounded-tl-[5px] rounded-tr-[3px] rounded-br-[6px] rounded-bl-[3px] border px-2.5 py-1 font-mono text-[11px] ${BADGE[it.estado].cls}`}
+                      >
+                        {BADGE[it.estado].label}
+                      </span>
+                    </div>
+                  </div>
+
+                  {editKey === it.key ? (
+                    <div className="mt-3 border-t border-ink-muted/15 pt-3">
+                      <div className="flex flex-wrap gap-2">
+                        <input
+                          inputMode="decimal"
+                          value={mConsumo}
+                          onChange={(e) => setMConsumo(e.target.value)}
+                          placeholder="Consumo"
+                          className="w-[110px] rounded-[6px] border border-ink-muted/35 bg-white/[0.03] px-3 py-2 text-[13px] text-ink-text outline-none focus:border-sello"
+                        />
+                        <select
+                          value={mUnidad}
+                          onChange={(e) => setMUnidad(e.target.value as Unidad)}
+                          className="rounded-[6px] border border-ink-muted/35 bg-white/[0.03] px-2 py-2 text-[13px] text-ink-text outline-none focus:border-sello"
+                        >
+                          <option value="kWh">kWh</option>
+                          <option value="m3">m³</option>
+                          <option value="litros">litros</option>
+                        </select>
+                        <input
+                          type="date"
+                          value={mIni}
+                          onChange={(e) => setMIni(e.target.value)}
+                          className="rounded-[6px] border border-ink-muted/35 bg-white/[0.03] px-3 py-2 text-[13px] text-ink-text outline-none focus:border-sello"
+                        />
+                        <input
+                          type="date"
+                          value={mFin}
+                          onChange={(e) => setMFin(e.target.value)}
+                          className="rounded-[6px] border border-ink-muted/35 bg-white/[0.03] px-3 py-2 text-[13px] text-ink-text outline-none focus:border-sello"
+                        />
+                        <button
+                          onClick={() => guardarManual(it)}
+                          disabled={mSaving}
+                          className="rounded-[6px] bg-sello px-4 py-2 text-[13px] font-semibold text-ink hover:bg-sello-hover disabled:opacity-50"
+                        >
+                          {mSaving ? "Guardando…" : "Guardar"}
+                        </button>
+                        <button
+                          onClick={() => setEditKey(null)}
+                          className="px-3 py-2 text-[13px] text-ink-muted hover:text-ink-text"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                      {mErr ? <p className="m-0 mt-2 text-[12.5px] text-error">{mErr}</p> : null}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
         ) : null}
 
