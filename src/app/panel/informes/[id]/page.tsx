@@ -4,6 +4,7 @@ import { createServerSupabase } from "@/lib/server/supabase-auth";
 import { LogoMark, Wordmark } from "@/components/Logo";
 import { MiniStamp } from "@/components/MiniStamp";
 import { EnviarInforme } from "@/components/panel/EnviarInforme";
+import { RegistroMiteco } from "@/components/panel/RegistroMiteco";
 import type { Destinatario, Informe } from "@/lib/db-types";
 
 export const metadata = { title: "Informe — Sellium" };
@@ -110,6 +111,13 @@ export default async function InformePage({
             <span className="font-mono text-[12.5px] text-alerta">PDF no disponible todavía</span>
           )}
         </div>
+
+        <RegistroMiteco
+          ejercicio={informe.ejercicio}
+          alcance1={informe.alcance1_tco2e}
+          alcance2={informe.alcance2_tco2e}
+          total={total}
+        />
       </main>
     </div>
   );
