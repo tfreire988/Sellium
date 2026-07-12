@@ -119,6 +119,7 @@ export interface SiteCopy {
     copyright: string;
     legal: string;
     privacy: string;
+    cookies: string;
     email: string;
   };
 }
@@ -269,6 +270,7 @@ export const copy: Record<Lang, SiteCopy> = {
       copyright: "© 2026 Sellium — Informes de huella de carbono para pymes",
       legal: "Aviso legal",
       privacy: "Privacidad",
+      cookies: "Cookies",
       email: "contacto@sellium.es",
     },
   },
@@ -415,6 +417,7 @@ export const copy: Record<Lang, SiteCopy> = {
       copyright: "© 2026 Sellium — Carbon footprint reports for SMEs",
       legal: "Legal notice",
       privacy: "Privacy",
+      cookies: "Cookies",
       email: "contacto@sellium.es",
     },
   },

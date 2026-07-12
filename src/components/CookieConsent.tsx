@@ -44,7 +44,7 @@ export function CookieConsent() {
           Usamos cookies necesarias para que el sitio funcione y, si lo aceptas,
           cookies analíticas para entender su uso. Puedes aceptarlas todas, rechazar
           las opcionales o elegir cuáles permites.{" "}
-          <a href="#" className="text-link">
+          <a href="/legal/cookies" className="text-link">
             Política de cookies
           </a>
           .
