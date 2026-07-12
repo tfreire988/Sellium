@@ -52,8 +52,21 @@ export async function POST(req: Request) {
     );
   }
 
-  const ejercicio = body.ejercicio ?? new Date().getFullYear();
   const db = getServiceClient();
+
+  // Reporting year: explicit if given, else the latest factor set available.
+  // MITECO publishes each year's factors in arrears, so "latest loaded" is the
+  // correct default — and it guarantees factors exist for the chosen year.
+  let ejercicio = body.ejercicio;
+  if (ejercicio == null) {
+    const { data: latest } = await db
+      .from("factores_emision")
+      .select("ejercicio")
+      .order("ejercicio", { ascending: false })
+      .limit(1)
+      .maybeSingle<{ ejercicio: number }>();
+    ejercicio = latest?.ejercicio ?? new Date().getFullYear();
+  }
 
   const [profileRes, destRes, facturasRes, factoresRes] = await Promise.all([
     db.from("profiles").select("*").eq("id", user.id).single<Profile>(),
