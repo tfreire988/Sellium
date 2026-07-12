@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
 import { getServiceClient } from "@/lib/server/supabase";
-import { requireEnv } from "@/lib/server/env";
+import { getAuthUser } from "@/lib/server/supabase-auth";
+import { getAnthropic, EXTRACTION_MODEL } from "@/lib/server/anthropic";
+import { BUCKET_FACTURAS } from "@/lib/server/storage";
+import {
+  EXTRACTION_PROMPT,
+  EXTRACTION_SCHEMA,
+  validarExtraccion,
+  type ExtraccionRaw,
+} from "@/lib/extraccion";
 import type { FacturaConsumo } from "@/lib/db-types";
 
 export const runtime = "nodejs";
@@ -9,35 +16,43 @@ export const runtime = "nodejs";
 /**
  * POST /api/facturas/extraer  — sellium-brief-desarrollo.md §3.2–3.3
  *
- * Given an uploaded bill id, download it from Storage, ask Claude (vision) to
- * return ONLY structured consumption JSON, and persist the result. Any field
- * Claude cannot determine with confidence comes back null → the row is flagged
- * `revision_manual` and the user confirms it before it ever reaches a report.
+ * Download the uploaded bill from Storage, ask Claude (vision) to return ONLY
+ * structured consumption JSON, validate it, and persist the result. Fields
+ * Claude can't determine come back null → the bill is flagged `revision_manual`
+ * and the user confirms it before it ever reaches a report.
  *
- * The ANTHROPIC_API_KEY never leaves the server (this route is `runtime:nodejs`
- * and the key is read via requireEnv, never NEXT_PUBLIC).
+ * The ANTHROPIC_API_KEY never leaves the server (runtime: nodejs; read via
+ * getAnthropic()/requireEnv, never NEXT_PUBLIC).
  */
 
 interface ExtraerBody {
   facturaId: string;
 }
 
-interface ExtraccionResult {
-  tipo_fuente: string | null;
-  periodo_inicio: string | null;
-  periodo_fin: string | null;
-  consumo: number | null;
-  unidad: string | null;
+/** Pick the Claude content block for the file based on its MIME type. */
+function fileBlock(mime: string, base64: string) {
+  if (mime === "application/pdf") {
+    return {
+      type: "document" as const,
+      source: { type: "base64" as const, media_type: "application/pdf" as const, data: base64 },
+    };
+  }
+  // Images: jpeg/png/webp/gif
+  const media = (["image/jpeg", "image/png", "image/webp", "image/gif"].includes(mime)
+    ? mime
+    : "image/jpeg") as "image/jpeg" | "image/png" | "image/webp" | "image/gif";
+  return {
+    type: "image" as const,
+    source: { type: "base64" as const, media_type: media, data: base64 },
+  };
 }
 
-const EXTRACTION_PROMPT =
-  "Extrae de esta factura de suministro el periodo de facturación y el consumo " +
-  "total en la unidad que aparezca (kWh, m³ o litros). Si no puedes determinar " +
-  "algún campo con seguridad, indica null en ese campo en vez de inventar un " +
-  "valor. Responde SOLO con un objeto JSON con las claves: tipo_fuente, " +
-  "periodo_inicio (YYYY-MM-DD), periodo_fin (YYYY-MM-DD), consumo (número), unidad.";
-
 export async function POST(req: Request) {
+  const user = await getAuthUser();
+  if (!user) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
   let body: ExtraerBody;
   try {
     body = (await req.json()) as ExtraerBody;
@@ -50,7 +65,7 @@ export async function POST(req: Request) {
 
   const db = getServiceClient();
 
-  // 1. Load the bill row.
+  // 1. Load the bill row and confirm ownership.
   const { data: factura, error: loadErr } = await db
     .from("facturas_consumo")
     .select("*")
@@ -60,26 +75,74 @@ export async function POST(req: Request) {
   if (loadErr || !factura) {
     return NextResponse.json({ error: "Factura not found" }, { status: 404 });
   }
+  if (factura.profile_id !== user.id) {
+    return NextResponse.json({ error: "Factura ajena" }, { status: 403 });
+  }
 
-  // 2. Ask Claude to read the file. (Downloading the bytes from Storage and
-  //    attaching them as an image/document block is the remaining wiring.)
-  const anthropic = new Anthropic({ apiKey: requireEnv("ANTHROPIC_API_KEY") });
-  void anthropic;
-  void EXTRACTION_PROMPT;
+  // 2. Download the file bytes from Storage.
+  const { data: blob, error: dlErr } = await db
+    .storage.from(BUCKET_FACTURAS)
+    .download(factura.archivo_url);
+  if (dlErr || !blob) {
+    return NextResponse.json(
+      { error: `No se pudo descargar el archivo: ${dlErr?.message}` },
+      { status: 502 },
+    );
+  }
+  const mime = blob.type || "image/jpeg";
+  const base64 = Buffer.from(await blob.arrayBuffer()).toString("base64");
 
-  // TODO(extraction): fetch factura.archivo_url from Storage, send it + prompt to
-  // anthropic.messages.create({ model: "claude-opus-4-8", ... }), parse the JSON.
-  return NextResponse.json(
-    {
-      error: "Not implemented",
-      detail:
-        "Extraction wiring pending: download archivo_url from Storage, call " +
-        "Claude vision, parse JSON, update facturas_consumo.",
-      facturaId: factura.id,
-    },
-    { status: 501 },
-  );
+  // 3. Ask Claude for structured JSON.
+  const anthropic = getAnthropic();
+  let raw: ExtraccionRaw;
+  try {
+    const message = await anthropic.messages.create({
+      model: EXTRACTION_MODEL,
+      max_tokens: 1024,
+      output_config: { format: { type: "json_schema", schema: EXTRACTION_SCHEMA } },
+      messages: [
+        {
+          role: "user",
+          content: [fileBlock(mime, base64), { type: "text", text: EXTRACTION_PROMPT }],
+        },
+      ],
+    });
+    if (message.stop_reason === "refusal") {
+      return NextResponse.json({ error: "La extracción fue rechazada" }, { status: 422 });
+    }
+    const text = message.content.find((b) => b.type === "text");
+    if (!text || text.type !== "text") {
+      throw new Error("Respuesta sin bloque de texto");
+    }
+    raw = JSON.parse(text.text) as ExtraccionRaw;
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : "error desconocido";
+    return NextResponse.json({ error: `Fallo en la extracción: ${detail}` }, { status: 502 });
+  }
+
+  // 4. Validate and persist.
+  const resultado = validarExtraccion(raw, factura.tipo);
+  const { data: updated, error: updErr } = await db
+    .from("facturas_consumo")
+    .update({
+      consumo_extraido: resultado.consumo_extraido,
+      unidad: resultado.unidad,
+      periodo_inicio: resultado.periodo_inicio,
+      periodo_fin: resultado.periodo_fin,
+      estado_extraccion: resultado.estado,
+    })
+    .eq("id", factura.id)
+    .select("*")
+    .single<FacturaConsumo>();
+
+  if (updErr || !updated) {
+    return NextResponse.json(
+      { error: `No se pudo guardar la extracción: ${updErr?.message}` },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({ factura: updated, motivos: resultado.motivos });
 }
 
-// Exported for the eventual implementation + unit tests.
-export type { ExtraerBody, ExtraccionResult };
+export type { ExtraerBody };
