@@ -15,7 +15,11 @@ import type { FacturaConsumo, FactorEmision, TipoFactura } from "./db-types";
 export const FUENTE_POR_TIPO: Record<TipoFactura, string | null> = {
   electricidad: "electricidad_red",
   gas: "gas_natural",
-  combustible: "gasoleo", // refine per fuel once bill detail is available
+  // Default bucket for a generic fuel bill = automotive diesel (B7), the most
+  // common SME case. The extraction step should refine this to the specific
+  // tipo_fuente present in factores_emision (gasoleo_c, gasolina, glp_auto…)
+  // when the bill makes the fuel explicit.
+  combustible: "gasoleo_a",
   otro: null,
 };
 
