@@ -64,7 +64,32 @@ export function DemoVideo() {
         className="relative overflow-hidden rounded-tl-[12px] rounded-tr-[6px] rounded-br-[10px] rounded-bl-[7px] border border-ink-muted/28 bg-[#121813] shadow-[0_20px_46px_rgba(10,7,3,0.5)]"
         style={{ aspectRatio: "16 / 10" }}
       >
-        <div className="absolute inset-0 bottom-[46px]">
+        {/* App-window chrome */}
+        <div className="absolute inset-x-0 top-0 flex h-[36px] items-center gap-3 border-b border-ink-muted/20 bg-[#0d120e] px-4">
+          <div className="flex gap-[7px]">
+            <span className="h-[10px] w-[10px] rounded-full bg-[#3a4038]" />
+            <span className="h-[10px] w-[10px] rounded-full bg-[#3a4038]" />
+            <span className="h-[10px] w-[10px] rounded-full bg-[#3a4038]" />
+          </div>
+          <div className="flex flex-1 items-center justify-center">
+            <span className="rounded-tl-[5px] rounded-tr-[3px] rounded-br-[6px] rounded-bl-[3px] bg-ink-text/8 px-3 py-[3px] font-mono text-[10px] tracking-[0.5px] text-ink-muted dt:text-[11px]">
+              app.sellium.es
+            </span>
+          </div>
+          <div className="w-[54px]" />
+        </div>
+
+        {/* Soft vignette for depth */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-10"
+          style={{
+            background:
+              "radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(0,0,0,0.35) 100%)",
+          }}
+        />
+
+        <div className="absolute inset-0 top-[36px] bottom-[46px]">
           {/* Scene 0 — drop bills */}
           <div className={fadeClass(scene === 0)}>
             <div className="flex h-full w-full flex-col items-center justify-center gap-7">
@@ -155,7 +180,7 @@ export function DemoVideo() {
         </div>
 
         {/* Controls */}
-        <div className="absolute inset-x-0 bottom-0 flex h-[46px] items-center gap-4 border-t border-ink-muted/20 bg-black/40 px-[18px]">
+        <div className="absolute inset-x-0 bottom-0 z-20 flex h-[46px] items-center gap-4 border-t border-ink-muted/20 bg-black/40 px-[18px]">
           <button
             onClick={() => setPlaying((p) => !p)}
             className="h-[26px] w-8 cursor-pointer rounded-tl-[5px] rounded-tr-[3px] rounded-br-[6px] rounded-bl-[3px] border border-ink-text/40 bg-transparent font-mono text-[11px] text-ink-text"
@@ -164,7 +189,7 @@ export function DemoVideo() {
           </button>
           <div className="h-[3px] flex-1 overflow-hidden rounded bg-ink-text/15">
             <div
-              className="h-full bg-sello"
+              className="h-full bg-cta"
               style={{ width: `${((tick + 1) / TOTAL_TICKS) * 100}%`, transition: "width 0.25s linear" }}
             />
           </div>
