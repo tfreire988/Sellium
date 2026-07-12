@@ -136,16 +136,20 @@ alter table public.factores_emision     enable row level security;
 -- ---------------------------------------------------------------------------
 -- profiles: a user reads/updates only their own profile.
 -- ---------------------------------------------------------------------------
+drop policy if exists profiles_select_own on public.profiles;
 create policy profiles_select_own on public.profiles
   for select using (id = auth.uid());
+drop policy if exists profiles_insert_own on public.profiles;
 create policy profiles_insert_own on public.profiles
   for insert with check (id = auth.uid());
+drop policy if exists profiles_update_own on public.profiles;
 create policy profiles_update_own on public.profiles
   for update using (id = auth.uid()) with check (id = auth.uid());
 
 -- ---------------------------------------------------------------------------
 -- clientes_gestionados: owned by the gestoría profile.
 -- ---------------------------------------------------------------------------
+drop policy if exists clientes_all_own on public.clientes_gestionados;
 create policy clientes_all_own on public.clientes_gestionados
   for all
   using (gestoria_id = auth.uid())
@@ -158,6 +162,7 @@ create policy clientes_all_own on public.clientes_gestionados
 -- ---------------------------------------------------------------------------
 -- destinatarios
 -- ---------------------------------------------------------------------------
+drop policy if exists destinatarios_all_own on public.destinatarios;
 create policy destinatarios_all_own on public.destinatarios
   for all
   using (
@@ -176,6 +181,7 @@ create policy destinatarios_all_own on public.destinatarios
 -- ---------------------------------------------------------------------------
 -- facturas_consumo
 -- ---------------------------------------------------------------------------
+drop policy if exists facturas_all_own on public.facturas_consumo;
 create policy facturas_all_own on public.facturas_consumo
   for all
   using (
@@ -194,6 +200,7 @@ create policy facturas_all_own on public.facturas_consumo
 -- ---------------------------------------------------------------------------
 -- informes
 -- ---------------------------------------------------------------------------
+drop policy if exists informes_all_own on public.informes;
 create policy informes_all_own on public.informes
   for all
   using (
@@ -213,6 +220,7 @@ create policy informes_all_own on public.informes
 -- factores_emision: reference data. Any authenticated user may read it (needed
 -- to compute a report); only the service role writes it (annual maintenance).
 -- ---------------------------------------------------------------------------
+drop policy if exists factores_select_all on public.factores_emision;
 create policy factores_select_all on public.factores_emision
   for select using (auth.role() = 'authenticated');
 
