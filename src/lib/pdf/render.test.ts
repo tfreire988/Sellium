@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { writeFileSync } from "node:fs";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { InformeDocument } from "./InformeDocument";
+import { medidasReduccion } from "../reduccion";
 
 describe("InformeDocument", () => {
   it("renders a valid PDF buffer", async () => {
@@ -18,6 +19,11 @@ describe("InformeDocument", () => {
         factorAnio: 2025,
         fuenteFactores: "MITECO Ed.2026 (V6) · factores 2025",
         fechaGeneracion: "12 de julio de 2026",
+        medidas: medidasReduccion({
+          alcance1_tco2e: 4.2,
+          alcance2_tco2e: 1.8,
+          alcance3_estimado_tco2e: 12.6,
+        }),
       }),
     );
     // Valid PDF magic number
@@ -39,6 +45,11 @@ describe("InformeDocument", () => {
         factorAnio: 2025,
         fuenteFactores: "MITECO Ed.2026 (V6) · factores 2025",
         fechaGeneracion: "12 de julio de 2026",
+        medidas: medidasReduccion({
+          alcance1_tco2e: 1.1,
+          alcance2_tco2e: 0.9,
+          alcance3_estimado_tco2e: null,
+        }),
       }),
     );
     expect(buf.subarray(0, 5).toString()).toBe("%PDF-");

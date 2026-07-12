@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
 } from "@react-pdf/renderer";
+import type { MedidaReduccion } from "../reduccion";
 
 /**
  * Formal carbon-footprint report PDF.
@@ -35,6 +36,8 @@ export interface InformeData {
   fuenteFactores: string;
   /** Human-readable generation date, e.g. "12 de julio de 2026". */
   fechaGeneracion: string;
+  /** Prioritised reduction measures (3–5 year outlook). May be empty. */
+  medidas: MedidaReduccion[];
 }
 
 const INK = "#241F16";
@@ -122,6 +125,30 @@ const styles = StyleSheet.create({
     borderColor: LINE,
     fontSize: 8.5,
     color: "#4A443A",
+    lineHeight: 1.5,
+  },
+
+  sectionTitle: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 13,
+    marginTop: 30,
+    marginBottom: 4,
+  },
+  sectionIntro: { fontSize: 9, color: MUTED, marginBottom: 14 },
+  medidaRow: { flexDirection: "row", marginBottom: 11 },
+  medidaNum: {
+    width: 18,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 10,
+    color: "#B8763A",
+  },
+  medidaBody: { flex: 1 },
+  medidaTitulo: { fontFamily: "Helvetica-Bold", fontSize: 10.5, marginBottom: 1 },
+  medidaDetalle: { fontSize: 9, color: "#4A443A", lineHeight: 1.5 },
+  medidaDisclaimer: {
+    marginTop: 6,
+    fontSize: 7.5,
+    color: MUTED,
     lineHeight: 1.5,
   },
 
@@ -247,6 +274,29 @@ export function InformeDocument(data: InformeData) {
             constituye una medición directa y debe interpretarse como una
             aproximación.
           </Text>
+        ) : null}
+
+        {data.medidas.length > 0 ? (
+          <View wrap={false}>
+            <Text style={styles.sectionTitle}>Plan de reducción</Text>
+            <Text style={styles.sectionIntro}>
+              Medidas prioritarias para un horizonte de 3 a 5 años, ordenadas
+              según dónde se concentran hoy tus emisiones.
+            </Text>
+            {data.medidas.map((m, i) => (
+              <View key={i} style={styles.medidaRow}>
+                <Text style={styles.medidaNum}>{i + 1}.</Text>
+                <View style={styles.medidaBody}>
+                  <Text style={styles.medidaTitulo}>{m.titulo}</Text>
+                  <Text style={styles.medidaDetalle}>{m.detalle}</Text>
+                </View>
+              </View>
+            ))}
+            <Text style={styles.medidaDisclaimer}>
+              Estas medidas son orientativas y no sustituyen un plan de
+              descarbonización detallado ni asesoramiento técnico especializado.
+            </Text>
+          </View>
         ) : null}
 
         <View style={styles.footer} fixed>

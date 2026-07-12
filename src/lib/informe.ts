@@ -1,5 +1,6 @@
 import type { ResultadoCalculo } from "./emisiones";
 import type { InformeData } from "./pdf/InformeDocument";
+import { medidasReduccion } from "./reduccion";
 
 /**
  * Pure helpers to shape an InformeData for the PDF from the calculation result
@@ -45,5 +46,6 @@ export function buildInformeData(args: BuildInformeArgs): InformeData {
     factorAnio: args.factorAnio,
     fuenteFactores: args.fuenteFactores,
     fechaGeneracion: fechaLarga(args.fecha),
+    medidas: medidasReduccion(args.calculo),
   };
 }
