@@ -58,11 +58,8 @@ export function HowItWorks() {
         {/* Step 2 */}
         <div className="relative dt:mt-[26px] dt:pt-2">
           <Connector />
-          <div className="mb-2 flex items-center gap-2.5">
+          <div className="mb-2.5">
             <NumberSeal size={30} number="2" />
-            <span className="font-mono text-[13px] text-ink-muted dt:text-[14px]">
-              {t.step2.number}
-            </span>
           </div>
           <h3 className="m-0 mb-2.5 font-serif text-[23px] leading-[1.15] font-semibold dt:mb-3.5 dt:text-[32px]">
             {t.step2.title}
@@ -85,11 +82,8 @@ export function HowItWorks() {
         {/* Step 3 */}
         <div className="relative dt:mt-[52px]">
           <Connector />
-          <div className="mb-2.5 flex items-center gap-2.5 dt:mb-3">
+          <div className="mb-2.5 dt:mb-3">
             <NumberSeal size={30} number="3" />
-            <span className="font-mono text-[13px] text-ink-muted dt:text-[14px]">
-              {t.step3.number}
-            </span>
           </div>
           <div className="relative mr-3.5 rounded-tl-[6px] rounded-tr-[10px] rounded-br-[5px] rounded-bl-[9px] bg-paper px-5 pt-[18px] pb-4 text-paper-text shadow-[0_12px_28px_rgba(15,10,4,0.4)] rotate-[0.8deg] dt:mr-0 dt:px-6 dt:pt-[22px] dt:pb-5 dt:shadow-[0_14px_34px_rgba(15,10,4,0.4)]">
             <p className="m-0 mb-2 font-mono text-[9.5px] tracking-[1px] text-paper-muted uppercase dt:mb-2.5 dt:text-[10.5px] dt:tracking-[1.5px]">
