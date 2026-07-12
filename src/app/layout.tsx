@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { CookieConsent } from "@/components/CookieConsent";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -40,7 +41,10 @@ export default function RootLayout({
       lang="es"
       className={`${fraunces.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
     >
-      <body className="bg-ink text-ink-text antialiased">{children}</body>
+      <body className="bg-ink text-ink-text antialiased">
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   );
 }
