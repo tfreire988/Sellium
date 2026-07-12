@@ -3,7 +3,7 @@ import { getServiceClient } from "@/lib/server/supabase";
 import { getAuthUser } from "@/lib/server/supabase-auth";
 import { uploadInformePDF } from "@/lib/server/storage";
 import { renderInformePDF } from "@/lib/pdf/render";
-import { calcularInforme } from "@/lib/emisiones";
+import { calcularInforme, FACTOR_ALCANCE3_DEFAULT } from "@/lib/emisiones";
 import { buildInformeData, refInforme } from "@/lib/informe";
 import type {
   Destinatario,
@@ -108,12 +108,18 @@ export async function POST(req: Request) {
     );
   }
 
+  // Scope 3 is only estimated when the user opts in with an annual spend figure.
+  // If they gave a spend but no factor, fall back to the generic spend-based one.
+  const factorA3 =
+    body.factorAlcance3 ??
+    (body.gastoAlcance3 != null ? FACTOR_ALCANCE3_DEFAULT : undefined);
+
   const calculo = calcularInforme(
     facturas,
     factores,
     ejercicio,
     body.gastoAlcance3,
-    body.factorAlcance3,
+    factorA3,
   );
 
   // Insert the row first (draft) to obtain the id used in the storage path and ref.

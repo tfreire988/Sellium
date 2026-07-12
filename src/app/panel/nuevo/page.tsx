@@ -15,6 +15,11 @@ interface Item {
   estado: Estado;
   facturaId?: string;
   detalle?: string;
+  // Last saved manual values, so re-opening the form pre-fills them.
+  sConsumo?: string;
+  sUnidad?: Unidad;
+  sIni?: string;
+  sFin?: string;
 }
 
 const TIPOS: { value: TipoFactura; label: string }[] = [
@@ -38,6 +43,7 @@ export default function NuevoInformePage() {
   const [items, setItems] = useState<Item[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const [cliente, setCliente] = useState("");
+  const [gasto, setGasto] = useState("");
   const [generando, setGenerando] = useState(false);
   const [genError, setGenError] = useState<string | null>(null);
 
@@ -52,10 +58,10 @@ export default function NuevoInformePage() {
 
   function abrirManual(it: Item) {
     setEditKey(it.key);
-    setMConsumo("");
-    setMUnidad(it.tipo === "combustible" ? "litros" : "kWh");
-    setMIni("");
-    setMFin("");
+    setMConsumo(it.sConsumo ?? "");
+    setMUnidad(it.sUnidad ?? (it.tipo === "combustible" ? "litros" : "kWh"));
+    setMIni(it.sIni ?? "");
+    setMFin(it.sFin ?? "");
     setMErr(null);
   }
 
@@ -81,7 +87,14 @@ export default function NuevoInformePage() {
       });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error ?? "No se pudo guardar");
-      patch(it.key, { estado: "ok", detalle: "Introducido a mano" });
+      patch(it.key, {
+        estado: "ok",
+        detalle: `${mConsumo} ${mUnidad} · introducido a mano`,
+        sConsumo: mConsumo,
+        sUnidad: mUnidad,
+        sIni: mIni,
+        sFin: mFin,
+      });
       setEditKey(null);
     } catch (err) {
       setMErr(err instanceof Error ? err.message : "Error");
@@ -159,13 +172,16 @@ export default function NuevoInformePage() {
       const dJson = await dRes.json();
       if (!dRes.ok) throw new Error(dJson.error ?? "No se pudo crear el cliente");
 
-      // 2. Generate the report from the OK bills.
+      // 2. Generate the report from the OK bills (+ optional Scope 3 spend).
+      const gastoNum = Number(gasto.replace(/[.\s]/g, "").replace(",", "."));
+      const gastoValido = Number.isFinite(gastoNum) && gastoNum > 0;
       const gRes = await fetch("/api/informes/generar", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           destinatarioId: dJson.destinatario.id,
           facturaIds: facturasOk.map((f) => f.facturaId),
+          ...(gastoValido ? { gastoAlcance3: gastoNum } : {}),
         }),
       });
       const gJson = await gRes.json();
@@ -242,8 +258,10 @@ export default function NuevoInformePage() {
         {items.length > 0 ? (
           <div className="mb-8 flex flex-col gap-2">
             {items.map((it) => {
+              // Any uploaded bill can be edited/corrected by hand once it's no
+              // longer mid-processing — including one already saved as "ok".
               const editable =
-                !!it.facturaId && (it.estado === "revision_manual" || it.estado === "error");
+                !!it.facturaId && it.estado !== "subiendo" && it.estado !== "extrayendo";
               return (
                 <div
                   key={it.key}
@@ -263,7 +281,7 @@ export default function NuevoInformePage() {
                           onClick={() => abrirManual(it)}
                           className="font-mono text-[12px] text-sello hover:underline"
                         >
-                          Introducir a mano
+                          {it.estado === "ok" ? "Editar" : "Introducir a mano"}
                         </button>
                       ) : null}
                       <span
@@ -345,6 +363,28 @@ export default function NuevoInformePage() {
               placeholder="Nombre del cliente"
               className="w-full rounded-tl-[7px] rounded-tr-[4px] rounded-br-[8px] rounded-bl-[4px] border border-ink-muted/35 bg-white/[0.03] px-3.5 py-2.5 text-[15px] text-ink-text outline-none placeholder:text-ink-muted focus:border-sello"
             />
+
+            <label className="flex flex-col gap-1.5">
+              <span className="text-[13px] font-medium text-ink-muted">
+                Gasto anual en compras y servicios (opcional)
+              </span>
+              <div className="flex items-center gap-2">
+                <input
+                  inputMode="decimal"
+                  value={gasto}
+                  onChange={(e) => setGasto(e.target.value)}
+                  placeholder="p. ej. 45000"
+                  className="w-[160px] rounded-tl-[7px] rounded-tr-[4px] rounded-br-[8px] rounded-bl-[4px] border border-ink-muted/35 bg-white/[0.03] px-3.5 py-2.5 text-[15px] text-ink-text outline-none placeholder:text-ink-muted focus:border-sello"
+                />
+                <span className="font-mono text-[13px] text-ink-muted">€ / año</span>
+              </div>
+              <span className="text-[12px] leading-[1.5] text-ink-muted">
+                Si lo indicas, añadimos una <span className="text-ink-text">estimación de Alcance 3</span>{" "}
+                (cadena de suministro) por método de gasto. Es una aproximación, no una medición. Déjalo
+                vacío y el informe cubrirá solo Alcances 1 y 2.
+              </span>
+            </label>
+
             {genError ? <p className="m-0 text-[13px] text-error">{genError}</p> : null}
             <div className="flex items-center gap-4">
               <button
