@@ -40,10 +40,29 @@ function factorFor(
   );
 }
 
+/** One priced bill: the audit trail behind a scope subtotal. */
+export interface LineaCalculo {
+  facturaId: string;
+  tipo: TipoFactura;
+  alcance: 1 | 2;
+  consumo: number;
+  unidad: string;
+  fuente: string;
+  factorValor: number;
+  factorUnidad: string;
+  tco2e: number;
+  periodoInicio: string | null;
+  periodoFin: string | null;
+}
+
 export interface ResultadoCalculo {
   alcance1_tco2e: number;
   alcance2_tco2e: number;
   alcance3_estimado_tco2e: number | null;
+  /** Per-bill breakdown for the report's audit table. */
+  lineas: LineaCalculo[];
+  /** Distinct emission factors actually applied. */
+  factoresUsados: FactorEmision[];
   /** Bills that could not be priced (missing factor or unextracted consumo). */
   sinFactor: string[];
 }
@@ -69,6 +88,8 @@ export function calcularInforme(
   let kg1 = 0;
   let kg2 = 0;
   const sinFactor: string[] = [];
+  const lineas: LineaCalculo[] = [];
+  const factoresUsados = new Map<string, FactorEmision>();
 
   for (const factura of facturas) {
     const alcance = alcanceDeTipo(factura.tipo);
@@ -88,6 +109,21 @@ export function calcularInforme(
     const kg = factura.consumo_extraido * factor.factor_kgco2e_por_unidad;
     if (alcance === 1) kg1 += kg;
     else kg2 += kg;
+
+    factoresUsados.set(factor.id, factor);
+    lineas.push({
+      facturaId: factura.id,
+      tipo: factura.tipo,
+      alcance,
+      consumo: factura.consumo_extraido,
+      unidad: factura.unidad ?? factor.unidad,
+      fuente: factor.tipo_fuente,
+      factorValor: factor.factor_kgco2e_por_unidad,
+      factorUnidad: factor.unidad,
+      tco2e: round3(kg / KG_POR_TONELADA),
+      periodoInicio: factura.periodo_inicio,
+      periodoFin: factura.periodo_fin,
+    });
   }
 
   const alcance3 =
@@ -99,6 +135,8 @@ export function calcularInforme(
     alcance1_tco2e: round3(kg1 / KG_POR_TONELADA),
     alcance2_tco2e: round3(kg2 / KG_POR_TONELADA),
     alcance3_estimado_tco2e: alcance3,
+    lineas,
+    factoresUsados: [...factoresUsados.values()],
     sinFactor,
   };
 }
