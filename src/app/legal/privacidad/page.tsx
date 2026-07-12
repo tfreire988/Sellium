@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LegalPage, H2, H3, P, UL, LI, Fill, Table } from "@/components/legal/LegalPage";
+import { LegalPage, H2, H3, P, UL, LI, Table } from "@/components/legal/LegalPage";
 
 export const metadata: Metadata = {
   title: "Política de privacidad · Sellium",
@@ -24,10 +24,6 @@ export default function PrivacidadPage() {
       <H2>1. Responsable del tratamiento</H2>
       <UL>
         <LI>Responsable: Telmo Freire Montero (persona física)</LI>
-        <LI>
-          Domicilio a efectos de notificaciones:{" "}
-          <Fill>COMPLETAR: domicilio</Fill>
-        </LI>
         <LI>
           Contacto en materia de protección de datos:{" "}
           <a href="mailto:contacto@sellium.es" className="text-link">
@@ -159,12 +155,6 @@ export default function PrivacidadPage() {
         Contractuales Tipo aprobadas por la Comisión Europea u otras garantías
         adecuadas previstas en el Capítulo V del RGPD. También podremos comunicar datos
         a autoridades públicas cuando exista obligación legal.
-      </P>
-      <P className="font-mono text-[13px] text-ink-muted">
-        <Fill>
-          COMPLETAR: revisa esta lista antes de lanzar y mantenla actualizada si cambias
-          de proveedor
-        </Fill>
       </P>
 
       <H2>6. Plazos de conservación</H2>

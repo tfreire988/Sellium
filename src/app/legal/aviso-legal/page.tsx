@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { LegalPage, H2, P, UL, LI, Fill } from "@/components/legal/LegalPage";
+import { LegalPage, H2, P, UL, LI } from "@/components/legal/LegalPage";
 
 export const metadata: Metadata = {
   title: "Aviso legal · Sellium",
@@ -31,8 +31,8 @@ export default function AvisoLegalPage() {
           </a>
         </LI>
         <LI>
-          Domicilio a efectos de notificaciones:{" "}
-          <Fill>COMPLETAR: domicilio</Fill>
+          A efectos de notificaciones, el correo electrónico indicado constituye el
+          medio de comunicación directa y efectiva con el titular.
         </LI>
         <LI>Datos registrales: no aplica (persona física, no inscrita en registro mercantil).</LI>
       </UL>
