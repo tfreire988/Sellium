@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/server/supabase-auth";
 import { LogoMark, Wordmark } from "@/components/Logo";
+import { EliminarCuenta } from "@/components/panel/EliminarCuenta";
 import type { Destinatario, Informe, Profile } from "@/lib/db-types";
 
 export const metadata = { title: "Panel — Sellium" };
@@ -153,6 +154,8 @@ export default async function PanelPage() {
             })}
           </div>
         )}
+
+        <EliminarCuenta />
       </main>
     </div>
   );

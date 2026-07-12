@@ -57,7 +57,12 @@ function LoginForm() {
           />
         </label>
         <label className="flex flex-col gap-1.5 text-[13px] font-medium text-paper-muted">
-          Contraseña
+          <span className="flex items-center justify-between">
+            Contraseña
+            <Link href="/recuperar" className="text-[12px] font-normal text-link">
+              ¿La olvidaste?
+            </Link>
+          </span>
           <input
             type="password"
             required
