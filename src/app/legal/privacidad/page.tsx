@@ -23,14 +23,11 @@ export default function PrivacidadPage() {
 
       <H2>1. Responsable del tratamiento</H2>
       <UL>
+        <LI>Responsable: Telmo Freire Montero (persona física)</LI>
+        <LI>DNI: 39497391C</LI>
         <LI>
-          Responsable: <Fill>COMPLETAR: razón social o nombre y apellidos</Fill>
-        </LI>
-        <LI>
-          NIF / CIF: <Fill>COMPLETAR: NIF/CIF</Fill>
-        </LI>
-        <LI>
-          Domicilio: <Fill>COMPLETAR: domicilio</Fill>
+          Domicilio a efectos de notificaciones:{" "}
+          <Fill>COMPLETAR: domicilio</Fill>
         </LI>
         <LI>
           Contacto en materia de protección de datos:{" "}

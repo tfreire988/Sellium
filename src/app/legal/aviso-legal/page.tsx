@@ -23,15 +23,8 @@ export default function AvisoLegalPage() {
         LSSI-CE, se facilitan los siguientes datos del titular:
       </P>
       <UL>
-        <LI>
-          Denominación / titular: <Fill>COMPLETAR: razón social o nombre y apellidos</Fill>
-        </LI>
-        <LI>
-          NIF / CIF: <Fill>COMPLETAR: NIF/CIF</Fill>
-        </LI>
-        <LI>
-          Domicilio: <Fill>COMPLETAR: domicilio fiscal completo</Fill>
-        </LI>
+        <LI>Titular: Telmo Freire Montero (persona física)</LI>
+        <LI>DNI: 39497391C</LI>
         <LI>
           Correo electrónico de contacto:{" "}
           <a href="mailto:contacto@sellium.es" className="text-link">
@@ -39,9 +32,10 @@ export default function AvisoLegalPage() {
           </a>
         </LI>
         <LI>
-          Datos registrales, si procede:{" "}
-          <Fill>COMPLETAR: registro mercantil, tomo, folio, hoja (solo sociedades)</Fill>
+          Domicilio a efectos de notificaciones:{" "}
+          <Fill>COMPLETAR: domicilio</Fill>
         </LI>
+        <LI>Datos registrales: no aplica (persona física, no inscrita en registro mercantil).</LI>
       </UL>
 
       <H2>2. Objeto</H2>

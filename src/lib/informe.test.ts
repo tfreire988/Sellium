@@ -6,6 +6,32 @@ const calculo: ResultadoCalculo = {
   alcance1_tco2e: 3.426,
   alcance2_tco2e: 2.58,
   alcance3_estimado_tco2e: 12.6,
+  lineas: [
+    {
+      facturaId: "f1",
+      tipo: "electricidad",
+      alcance: 2,
+      consumo: 12900,
+      unidad: "kWh",
+      fuente: "electricidad_red",
+      factorValor: 0.2,
+      factorUnidad: "kWh",
+      tco2e: 2.58,
+      periodoInicio: "2025-01-01",
+      periodoFin: "2025-12-31",
+    },
+  ],
+  factoresUsados: [
+    {
+      id: "x1",
+      ejercicio: 2025,
+      tipo_fuente: "electricidad_red",
+      factor_kgco2e_por_unidad: 0.2,
+      unidad: "kWh",
+      fuente: "MITECO Ed.2026 (V6) · 2025",
+      created_at: "",
+    },
+  ],
   sinFactor: [],
 };
 
@@ -41,6 +67,15 @@ describe("buildInformeData", () => {
     expect(data.metodologia).toBe("GHG Protocol + factores MITECO");
     expect(data.fechaGeneracion).toBe("12 de julio de 2026");
     expect(data.numero).toBe("SL-2025-0001");
+    // Enriched fields
+    expect(data.totalTco2e).toBeCloseTo(18.606, 3);
+    expect(data.nFacturas).toBe(1);
+    expect(data.desglose).toHaveLength(1);
+    expect(data.desglose[0].fuente).toBe("Electricidad de red");
+    expect(data.desglose[0].consumo).toBe("12.900 kWh");
+    expect(data.desglose[0].periodo).toBe("01/2025 – 12/2025");
+    expect(data.factores).toHaveLength(1);
+    expect(data.medidas.length).toBeGreaterThan(0);
   });
 
   it("passes a null Scope 3 through unchanged", () => {
