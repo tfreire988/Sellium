@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/server/supabase-auth";
 import { LogoMark, Wordmark } from "@/components/Logo";
 import { MiniStamp } from "@/components/MiniStamp";
+import { EnviarInforme } from "@/components/panel/EnviarInforme";
 import type { Destinatario, Informe } from "@/lib/db-types";
 
 export const metadata = { title: "Informe — Sellium" };
@@ -94,20 +95,20 @@ export default async function InformePage({
           </div>
         </div>
 
-        <div className="mt-7 flex items-center gap-4">
+        <div className="mt-7 flex flex-wrap items-center gap-4">
           {informe.pdf_url ? (
-            <a
-              href={`/api/informes/${informe.id}/descargar`}
-              className="inline-block rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-[22px] py-3 text-[15px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline"
-            >
-              Descargar PDF
-            </a>
+            <>
+              <a
+                href={`/api/informes/${informe.id}/descargar`}
+                className="inline-block rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-[22px] py-3 text-[15px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline"
+              >
+                Descargar PDF
+              </a>
+              <EnviarInforme informeId={informe.id} yaEnviadoA={informe.enviado_a_email} />
+            </>
           ) : (
             <span className="font-mono text-[12.5px] text-alerta">PDF no disponible todavía</span>
           )}
-          <span className="font-mono text-[12.5px] text-ink-muted">
-            Estado: {informe.estado}
-          </span>
         </div>
       </main>
     </div>
