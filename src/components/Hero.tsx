@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "@/lib/language-context";
 import { copy } from "@/lib/copy";
 import { HeroStamp } from "./HeroStamp";
@@ -23,13 +24,13 @@ export function Hero() {
         </p>
 
         <div className="mb-11 flex flex-col gap-3 dt:mb-0 dt:flex-row dt:items-center dt:gap-4">
-          <a
+          <Link
             id="empezar"
-            href="#precios"
+            href="/registro"
             className="block rounded-tl-[9px] rounded-tr-[5px] rounded-br-[10px] rounded-bl-[6px] bg-sello py-[15px] text-center text-[16px] font-semibold text-ink no-underline shadow-[0_10px_26px_rgba(120,70,20,0.35)] hover:bg-sello-hover hover:text-ink hover:no-underline dt:px-7 dt:py-[15px] dt:text-[17px]"
           >
             {t.ctaPrimary}
-          </a>
+          </Link>
           <a
             href="#como-funciona"
             className="block rounded-tl-[6px] rounded-tr-[9px] rounded-br-[5px] rounded-bl-[8px] border border-ink-muted/45 py-[13px] text-center text-[15px] text-ink-text no-underline hover:border-sello hover:text-ink-text hover:no-underline dt:px-[22px] dt:py-[14px] dt:text-[16px]"

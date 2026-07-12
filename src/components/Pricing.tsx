@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "@/lib/language-context";
 import { copy } from "@/lib/copy";
 
@@ -46,12 +47,12 @@ export function Pricing() {
                 </li>
               ))}
             </ul>
-            <a
-              href="#empezar"
+            <Link
+              href="/registro"
               className="block rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello py-[13px] text-center text-[15px] font-semibold text-ink no-underline hover:bg-sello-hover-2 hover:text-ink hover:no-underline dt:text-[16px]"
             >
               {t.single.cta}
-            </a>
+            </Link>
             <p className="m-0 mt-3.5 text-[12.5px] leading-[1.45] text-paper-muted dt:mt-[18px] dt:text-[13px]">
               {t.single.roi}
             </p>
@@ -84,12 +85,12 @@ export function Pricing() {
                 </li>
               ))}
             </ul>
-            <a
-              href="#gestorias"
+            <Link
+              href="/registro"
               className="block rounded-tl-[5px] rounded-tr-[9px] rounded-br-[5px] rounded-bl-[8px] border-[1.5px] border-paper-text py-3 text-center text-[15px] font-semibold text-paper-text no-underline hover:bg-paper-text hover:text-ink-text hover:no-underline dt:text-[16px]"
             >
               {t.accountancy.cta}
-            </a>
+            </Link>
             <p className="m-0 mt-3.5 text-[12.5px] leading-[1.45] text-paper-muted dt:mt-[18px] dt:text-[13px]">
               {t.accountancy.roi}
             </p>

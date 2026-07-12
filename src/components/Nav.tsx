@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLanguage } from "@/lib/language-context";
 import { copy } from "@/lib/copy";
 import { LogoMark, Wordmark } from "./Logo";
@@ -34,12 +35,19 @@ export function Nav() {
 
         <LanguageToggle small />
 
-        <a
-          href="#empezar"
+        <Link
+          href="/login"
+          className="hidden text-[15px] text-ink-text no-underline dt:inline"
+        >
+          {t.login}
+        </Link>
+
+        <Link
+          href="/registro"
           className="rounded-tl-[7px] rounded-tr-[4px] rounded-br-[8px] rounded-bl-[4px] bg-sello px-4 py-[9px] text-[13.5px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline dt:px-[22px] dt:py-[11px] dt:text-[15px]"
         >
           {t.cta}
-        </a>
+        </Link>
       </div>
     </nav>
   );
