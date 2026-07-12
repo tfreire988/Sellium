@@ -66,9 +66,12 @@ export default async function PanelPage() {
             Sube las facturas de luz, gas o combustible del último año, indica para qué
             cliente es el informe, y lo calculamos con los factores oficiales del MITECO.
           </p>
-          <span className="inline-block rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello/40 px-[22px] py-3 text-[15px] font-semibold text-ink-text">
-            Subir facturas — próximamente
-          </span>
+          <a
+            href="/panel/nuevo"
+            className="inline-block rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-[22px] py-3 text-[15px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline"
+          >
+            Subir facturas
+          </a>
         </div>
       </main>
     </div>
