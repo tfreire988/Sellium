@@ -13,6 +13,10 @@
   --color-sello: #b8763a;
   --color-sello-hover: #c98544;
   --color-sello-hover-2: #a6682f;
+  /* Deeper terracotta used only for solid CTA buttons: gives cream text an
+     AA-legible contrast that the mid-tone --color-sello cannot. */
+  --color-cta: #a05c28;
+  --color-cta-hover: #b56d33;
   --color-verificado: #4f6b4a;
   --color-ink-text: #f2eee0;
   --color-ink-muted: #8c9689;

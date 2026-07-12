@@ -16,7 +16,7 @@ export function FinalCta() {
       <div className="flex flex-col gap-3.5 dt:flex-row dt:items-center dt:gap-[18px]">
         <Link
           href="/registro"
-          className="block rounded-tl-[9px] rounded-tr-[5px] rounded-br-[10px] rounded-bl-[6px] bg-sello py-[15px] text-center text-[16px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline dt:px-[30px] dt:text-[17px]"
+          className="block rounded-tl-[9px] rounded-tr-[5px] rounded-br-[10px] rounded-bl-[6px] bg-cta py-[15px] text-center text-[16px] font-semibold text-paper-2 no-underline hover:bg-cta-hover hover:text-paper-2 hover:no-underline dt:px-[30px] dt:text-[17px]"
         >
           {t.cta}
         </Link>

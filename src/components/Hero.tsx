@@ -27,7 +27,7 @@ export function Hero() {
           <Link
             id="empezar"
             href="/registro"
-            className="block rounded-tl-[9px] rounded-tr-[5px] rounded-br-[10px] rounded-bl-[6px] bg-sello py-[15px] text-center text-[16px] font-semibold text-ink no-underline shadow-[0_10px_26px_rgba(120,70,20,0.35)] hover:bg-sello-hover hover:text-ink hover:no-underline dt:px-7 dt:py-[15px] dt:text-[17px]"
+            className="block rounded-tl-[9px] rounded-tr-[5px] rounded-br-[10px] rounded-bl-[6px] bg-cta py-[15px] text-center text-[16px] font-semibold text-paper-2 no-underline shadow-[0_10px_26px_rgba(120,70,20,0.35)] hover:bg-cta-hover hover:text-paper-2 hover:no-underline dt:px-7 dt:py-[15px] dt:text-[17px]"
           >
             {t.ctaPrimary}
           </Link>

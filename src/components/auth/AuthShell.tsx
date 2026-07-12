@@ -42,4 +42,4 @@ export const authInputClass =
 
 /** Shared primary-button styling for the auth forms. */
 export const authButtonClass =
-  "w-full rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello py-3 text-center text-[15px] font-semibold text-ink no-underline hover:bg-sello-hover disabled:opacity-60";
+  "w-full rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-cta py-3 text-center text-[15px] font-semibold text-paper-2 no-underline hover:bg-cta-hover disabled:opacity-60";

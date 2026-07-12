@@ -40,11 +40,24 @@ export interface SiteCopy {
     line2: string;
     line3: string;
     closing: string;
+    email: {
+      from: string;
+      date: string;
+      subject: string;
+      body: string;
+      tag: string;
+    };
   };
   howItWorks: {
     title: string;
     step1: { title: string; body: string };
-    step2: { number: string; title: string; body: string };
+    step2: {
+      number: string;
+      title: string;
+      body: string;
+      chipLabel: string;
+      chipValue: string;
+    };
     step3: {
       number: string;
       filename: string;
@@ -73,23 +86,20 @@ export interface SiteCopy {
   pricing: {
     title: string;
     subtitle: string;
-    single: {
+    free: {
+      badge: string;
       label: string;
       price: string;
       priceNote: string;
       features: [string, string, string];
       cta: string;
-      roi: string;
+      note: string;
     };
-    accountancy: {
+    paid: {
       label: string;
-      priceFrom: string;
-      price: string;
-      pricePer: string;
-      priceNote: string;
-      features: [string, string, string];
-      cta: string;
-      roi: string;
+      soon: string;
+      body: string;
+      items: [string, string, string];
     };
   };
   accountants: {
@@ -134,7 +144,7 @@ export const copy: Record<Lang, SiteCopy> = {
       cta: "Empezar mi informe",
     },
     hero: {
-      eyebrow: "Huella de carbono para pymes · Informe en 24 h",
+      eyebrow: "Huella de carbono para pymes · Gratis en la beta",
       title:
         "Tu cliente te ha pedido tu huella de carbono. Aquí la tienes en un día.",
       subtitle:
@@ -170,6 +180,13 @@ export const copy: Record<Lang, SiteCopy> = {
       line3: "Tu gestoría de siempre no incluye esto en su servicio habitual.",
       closing:
         "Sellium no viene a hablarte de sostenibilidad. Viene a quitarte un trámite de encima.",
+      email: {
+        from: "grandes.cuentas@grupoaltavera.es",
+        date: "Lun · 09:14",
+        subject: "Solicitud: huella de carbono de proveedores",
+        body: "Hola: para renovar el contrato el año que viene necesitamos vuestro informe de huella de carbono (Alcance 1 y 2) antes del 30 de septiembre. ¿Nos lo podéis enviar?",
+        tag: "SIN RESPONDER",
+      },
     },
     howItWorks: {
       title: "Cómo funciona",
@@ -181,6 +198,8 @@ export const copy: Record<Lang, SiteCopy> = {
         number: "2 —",
         title: "Dinos para quién es",
         body: "El informe lleva el nombre de tu cliente y se ajusta a su información conforme trabajamos contigo — no es un PDF genérico con tus datos rellenados.",
+        chipLabel: "Destinatario",
+        chipValue: "Grupo Altavera Construcciones",
       },
       step3: {
         number: "3 —",
@@ -213,34 +232,31 @@ export const copy: Record<Lang, SiteCopy> = {
       ],
     },
     pricing: {
-      title: "Precio, sin letra pequeña",
+      title: "Ahora mismo, gratis",
       subtitle:
-        "Sin permanencia. Y si tu cliente pide otro formato, los cambios van dentro.",
-      single: {
-        label: "Informe único",
-        price: "149 €",
-        priceNote: "pago único · IVA incluido",
+        "Sellium está en beta. Mientras lo pulimos contigo, generas tu informe completo sin pagar nada y sin tarjeta.",
+      free: {
+        badge: "BETA",
+        label: "Plan gratis",
+        price: "0 €",
+        priceNote: "durante la beta · sin tarjeta",
         features: [
-          "Alcances 1 y 2 + estimación de Alcance 3",
-          "PDF listo para tu cliente en 24 h",
-          "Cambios incluidos si tu cliente pide otro formato",
+          "Informe completo: Alcances 1 y 2 + estimación de Alcance 3",
+          "PDF con el nombre de tu cliente, listo para enviar",
+          "Cálculo con los factores oficiales del MITECO",
         ],
-        cta: "Empezar mi informe",
-        roi: "Entre 7 y 20 veces más barato que una consultora tradicional.",
+        cta: "Empezar gratis",
+        note: "Sin tarjeta. Sin permanencia.",
       },
-      accountancy: {
-        label: "Plan gestoría",
-        priceFrom: "desde",
-        price: "29 €",
-        pricePer: "/mes",
-        priceNote: "al mes · informes a precio por volumen",
-        features: [
-          "Panel multi-cliente con estado de cada informe",
-          "Recordatorios automáticos y enlace de subida para cada cliente",
-          "Precio por volumen",
+      paid: {
+        label: "Planes de pago",
+        soon: "Próximamente",
+        body: "Cuando termine la beta habrá un plan de pago por informe para pymes y un plan por volumen para gestorías. Quien entre ahora mantendrá condiciones especiales de lanzamiento.",
+        items: [
+          "Informe único para pymes y autónomos",
+          "Plan por volumen para gestorías y asesorías",
+          "Ventajas de lanzamiento para los primeros usuarios",
         ],
-        cta: "Crear mi panel",
-        roi: "Un solo contacto comercial, decenas de informes.",
       },
     },
     accountants: {
@@ -264,7 +280,7 @@ export const copy: Record<Lang, SiteCopy> = {
     finalCta: {
       title: "Deja de posponer algo que se hace en un día.",
       cta: "Empezar mi informe",
-      note: "149 € · listo en 24 h",
+      note: "Gratis durante la beta · listo en 24 h",
     },
     footer: {
       copyright: "© 2026 Sellium — Informes de huella de carbono para pymes",
@@ -283,7 +299,7 @@ export const copy: Record<Lang, SiteCopy> = {
       cta: "Start my report",
     },
     hero: {
-      eyebrow: "Carbon footprint for SMEs · Report in 24 h",
+      eyebrow: "Carbon footprint for SMEs · Free in beta",
       title: "Your client asked for your carbon footprint. Here it is — in a day.",
       subtitle:
         "Upload your electricity and fuel bills. We do the rest — and hand you something your client will accept.",
@@ -317,6 +333,13 @@ export const copy: Record<Lang, SiteCopy> = {
       line3: "Your regular accountant doesn't offer this as part of their usual service.",
       closing:
         "Sellium isn't here to lecture you about sustainability. It's here to take a chore off your plate.",
+      email: {
+        from: "procurement@grupoaltavera.es",
+        date: "Mon · 09:14",
+        subject: "Request: supplier carbon footprint",
+        body: "Hi — to keep the contract next year we need your carbon footprint report (Scope 1 and 2) before 30 September. Can you send it over?",
+        tag: "UNANSWERED",
+      },
     },
     howItWorks: {
       title: "How it works",
@@ -328,6 +351,8 @@ export const copy: Record<Lang, SiteCopy> = {
         number: "2 —",
         title: "Tell us who it's for",
         body: "The report carries your client's name and is refined together with you — not a generic PDF with your data filled in.",
+        chipLabel: "Recipient",
+        chipValue: "Grupo Altavera Construcciones",
       },
       step3: {
         number: "3 —",
@@ -360,34 +385,31 @@ export const copy: Record<Lang, SiteCopy> = {
       ],
     },
     pricing: {
-      title: "Pricing, no fine print",
+      title: "Right now, it's free",
       subtitle:
-        "No commitment. If your client asks for a different format, revisions are included.",
-      single: {
-        label: "Single report",
-        price: "€149",
-        priceNote: "one-time payment · VAT included",
+        "Sellium is in beta. While we polish it with you, you can generate your full report at no cost and with no card.",
+      free: {
+        badge: "BETA",
+        label: "Free plan",
+        price: "€0",
+        priceNote: "during the beta · no card",
         features: [
-          "Scopes 1 & 2 + Scope 3 estimate",
-          "Client-ready PDF within 24 h",
-          "Revisions included if your client wants another format",
+          "Full report: Scopes 1 & 2 + Scope 3 estimate",
+          "PDF with your client's name, ready to send",
+          "Calculated with official MITECO factors",
         ],
-        cta: "Start my report",
-        roi: "Between 7× and 20× cheaper than a traditional consultancy.",
+        cta: "Start free",
+        note: "No card. No commitment.",
       },
-      accountancy: {
-        label: "Accountancy plan",
-        priceFrom: "from",
-        price: "€29",
-        pricePer: "/mo",
-        priceNote: "per month · volume pricing on reports",
-        features: [
-          "Multi-client panel with per-report status",
-          "Automatic reminders and an upload link for each client",
-          "Volume pricing",
+      paid: {
+        label: "Paid plans",
+        soon: "Coming soon",
+        body: "When the beta ends there will be a pay-per-report plan for SMEs and a volume plan for accountancy firms. Whoever joins now keeps special launch terms.",
+        items: [
+          "Single report for SMEs and freelancers",
+          "Volume plan for accountancy & advisory firms",
+          "Launch perks for the first users",
         ],
-        cta: "Set up my panel",
-        roi: "One sales conversation, dozens of reports.",
       },
     },
     accountants: {
@@ -411,7 +433,7 @@ export const copy: Record<Lang, SiteCopy> = {
     finalCta: {
       title: "Stop postponing something that takes one day.",
       cta: "Start my report",
-      note: "€149 · ready in 24 h",
+      note: "Free during the beta · ready in 24 h",
     },
     footer: {
       copyright: "© 2026 Sellium — Carbon footprint reports for SMEs",

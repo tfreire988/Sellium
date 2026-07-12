@@ -44,7 +44,7 @@ export function Nav() {
 
         <Link
           href="/registro"
-          className="rounded-tl-[7px] rounded-tr-[4px] rounded-br-[8px] rounded-bl-[4px] bg-sello px-4 py-[9px] text-[13.5px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline dt:px-[22px] dt:py-[11px] dt:text-[15px]"
+          className="rounded-tl-[7px] rounded-tr-[4px] rounded-br-[8px] rounded-bl-[4px] bg-cta px-4 py-[9px] text-[13.5px] font-semibold text-paper-2 no-underline hover:bg-cta-hover hover:text-paper-2 hover:no-underline dt:px-[22px] dt:py-[11px] dt:text-[15px]"
         >
           {t.cta}
         </Link>
