@@ -88,12 +88,22 @@ export default async function PanelPage() {
               </span>
             </p>
           </div>
-          <Link
-            href="/panel/nuevo"
-            className="rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-[22px] py-3 text-[15px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline"
-          >
-            + Nuevo informe
-          </Link>
+          <div className="flex items-center gap-3">
+            {esGestoria ? (
+              <Link
+                href="/panel/clientes"
+                className="rounded-tl-[6px] rounded-tr-[9px] rounded-br-[5px] rounded-bl-[8px] border border-ink-muted/45 px-[22px] py-3 text-[15px] font-semibold text-ink-text no-underline hover:border-sello hover:text-ink-text hover:no-underline"
+              >
+                Tus clientes
+              </Link>
+            ) : null}
+            <Link
+              href="/panel/nuevo"
+              className="rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-[22px] py-3 text-[15px] font-semibold text-ink no-underline hover:bg-sello-hover hover:text-ink hover:no-underline"
+            >
+              + Nuevo informe
+            </Link>
+          </div>
         </div>
 
         <h2 className="m-0 mb-4 font-serif text-[20px] font-semibold">Tus informes</h2>
