@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { LogoMark, Wordmark } from "@/components/Logo";
 import type { TipoFactura } from "@/lib/db-types";
 
@@ -32,9 +33,13 @@ const BADGE: Record<Estado, { label: string; cls: string }> = {
 };
 
 export default function NuevoInformePage() {
+  const router = useRouter();
   const [tipo, setTipo] = useState<TipoFactura>("electricidad");
   const [items, setItems] = useState<Item[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [cliente, setCliente] = useState("");
+  const [generando, setGenerando] = useState(false);
+  const [genError, setGenError] = useState<string | null>(null);
 
   function patch(key: string, next: Partial<Item>) {
     setItems((prev) => prev.map((it) => (it.key === key ? { ...it, ...next } : it)));
@@ -80,7 +85,49 @@ export default function NuevoInformePage() {
     if (inputRef.current) inputRef.current.value = "";
   }
 
-  const listas = items.filter((i) => i.estado === "ok").length;
+  const facturasOk = items.filter((i) => i.estado === "ok" && i.facturaId);
+  const listas = facturasOk.length;
+  const trabajando = items.some((i) => i.estado === "subiendo" || i.estado === "extrayendo");
+
+  async function generar() {
+    setGenError(null);
+    if (!cliente.trim()) {
+      setGenError("Indica el nombre del cliente.");
+      return;
+    }
+    if (facturasOk.length === 0) {
+      setGenError("Sube al menos una factura leída correctamente.");
+      return;
+    }
+    setGenerando(true);
+    try {
+      // 1. Create the recipient.
+      const dRes = await fetch("/api/destinatarios", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ nombre: cliente.trim() }),
+      });
+      const dJson = await dRes.json();
+      if (!dRes.ok) throw new Error(dJson.error ?? "No se pudo crear el cliente");
+
+      // 2. Generate the report from the OK bills.
+      const gRes = await fetch("/api/informes/generar", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          destinatarioId: dJson.destinatario.id,
+          facturaIds: facturasOk.map((f) => f.facturaId),
+        }),
+      });
+      const gJson = await gRes.json();
+      if (!gRes.ok) throw new Error(gJson.error ?? "No se pudo generar el informe");
+
+      router.push(`/panel/informes/${gJson.informe.id}`);
+    } catch (err) {
+      setGenError(err instanceof Error ? err.message : "Error al generar");
+      setGenerando(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-ink text-ink-text">
@@ -167,18 +214,37 @@ export default function NuevoInformePage() {
           </div>
         ) : null}
 
-        {/* Next step (recipient) — wired next */}
-        <div className="flex items-center gap-4">
-          <span
-            aria-disabled
-            className="inline-block cursor-not-allowed rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello/40 px-[22px] py-3 text-[15px] font-semibold text-ink-text"
-            title="Disponible en el siguiente paso"
-          >
-            Continuar: elegir cliente — próximamente
-          </span>
-          <span className="font-mono text-[12.5px] text-ink-muted">
-            {listas} factura{listas === 1 ? "" : "s"} lista{listas === 1 ? "" : "s"}
-          </span>
+        {/* Step 2 — recipient + generate */}
+        <div className="border-t border-ink-muted/20 pt-7">
+          <p className="m-0 mb-2 font-mono text-[11px] tracking-[2px] text-ink-muted uppercase">
+            Paso 2 de 2 · Para quién es
+          </p>
+          <h2 className="m-0 mb-1.5 font-serif text-[22px] font-semibold">Dinos el cliente</h2>
+          <p className="m-0 mb-4 max-w-[60ch] text-[14px] leading-[1.55] text-[#C7CCC2]">
+            El informe llevará el nombre de tu cliente (la empresa que te pidió la huella).
+          </p>
+          <div className="flex max-w-[480px] flex-col gap-3">
+            <input
+              type="text"
+              value={cliente}
+              onChange={(e) => setCliente(e.target.value)}
+              placeholder="Nombre del cliente"
+              className="w-full rounded-tl-[7px] rounded-tr-[4px] rounded-br-[8px] rounded-bl-[4px] border border-ink-muted/35 bg-white/[0.03] px-3.5 py-2.5 text-[15px] text-ink-text outline-none placeholder:text-ink-muted focus:border-sello"
+            />
+            {genError ? <p className="m-0 text-[13px] text-error">{genError}</p> : null}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={generar}
+                disabled={generando || trabajando || listas === 0}
+                className="rounded-tl-[8px] rounded-tr-[5px] rounded-br-[9px] rounded-bl-[5px] bg-sello px-[22px] py-3 text-[15px] font-semibold text-ink hover:bg-sello-hover disabled:opacity-50"
+              >
+                {generando ? "Generando…" : "Generar informe"}
+              </button>
+              <span className="font-mono text-[12.5px] text-ink-muted">
+                {listas} factura{listas === 1 ? "" : "s"} lista{listas === 1 ? "" : "s"}
+              </span>
+            </div>
+          </div>
         </div>
       </main>
     </div>
