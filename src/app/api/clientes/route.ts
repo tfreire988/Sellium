@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/server/supabase";
 import { getAuthUser } from "@/lib/server/supabase-auth";
+import { ensureProfile } from "@/lib/server/ensure-profile";
 import type { ClienteGestionado, Profile } from "@/lib/db-types";
 
 export const runtime = "nodejs";
@@ -21,6 +22,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function POST(req: Request) {
   const user = await getAuthUser();
   if (!user) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  await ensureProfile(user);
 
   const db = getServiceClient();
   const { data: profile } = await db
