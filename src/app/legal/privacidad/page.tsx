@@ -24,15 +24,14 @@ export default function PrivacidadPage() {
       <H2>1. Responsable del tratamiento</H2>
       <UL>
         <LI>Responsable: Telmo Freire Montero (persona física)</LI>
-        <LI>DNI: 39497391C</LI>
         <LI>
           Domicilio a efectos de notificaciones:{" "}
           <Fill>COMPLETAR: domicilio</Fill>
         </LI>
         <LI>
           Contacto en materia de protección de datos:{" "}
-          <a href="mailto:privacidad@sellium.es" className="text-link">
-            privacidad@sellium.es
+          <a href="mailto:contacto@sellium.es" className="text-link">
+            contacto@sellium.es
           </a>
         </LI>
       </UL>
@@ -190,8 +189,8 @@ export default function PrivacidadPage() {
         Puedes ejercer los derechos de acceso, rectificación, supresión, oposición,
         limitación del tratamiento y portabilidad, así como retirar el consentimiento
         prestado, escribiendo a{" "}
-        <a href="mailto:privacidad@sellium.es" className="text-link">
-          privacidad@sellium.es
+        <a href="mailto:contacto@sellium.es" className="text-link">
+          contacto@sellium.es
         </a>
         . Podemos solicitarte que acredites tu identidad. Desde tu panel puedes,
         además, eliminar tu cuenta y los datos asociados.

@@ -24,7 +24,6 @@ export default function AvisoLegalPage() {
       </P>
       <UL>
         <LI>Titular: Telmo Freire Montero (persona física)</LI>
-        <LI>DNI: 39497391C</LI>
         <LI>
           Correo electrónico de contacto:{" "}
           <a href="mailto:contacto@sellium.es" className="text-link">
