@@ -8,6 +8,7 @@ import { DemoVideo } from "@/components/DemoVideo";
 import { Pricing } from "@/components/Pricing";
 import { Accountants } from "@/components/Accountants";
 import { Trust } from "@/components/Trust";
+import { Faq } from "@/components/Faq";
 import { FinalCta } from "@/components/FinalCta";
 import { Footer } from "@/components/Footer";
 
@@ -24,6 +25,7 @@ export default function Home() {
         <Pricing />
         <Accountants />
         <Trust />
+        <Faq />
         <FinalCta />
         <Footer />
       </div>

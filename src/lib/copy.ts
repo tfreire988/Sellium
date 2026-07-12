@@ -120,6 +120,11 @@ export interface SiteCopy {
     badge: string;
     body: string;
   };
+  faq: {
+    eyebrow: string;
+    title: string;
+    items: { q: string; a: string }[];
+  };
   finalCta: {
     title: string;
     cta: string;
@@ -275,7 +280,29 @@ export const copy: Record<Lang, SiteCopy> = {
     },
     trust: {
       badge: "MITECO · 2026",
-      body: "Los cálculos usan los factores de emisión oficiales del MITECO (Ministerio para la Transición Ecológica), actualizados cada ejercicio — la misma referencia que exige el registro voluntario de huella de carbono en España.",
+      body: "Calculamos con los factores de emisión oficiales del MITECO, actualizados cada ejercicio — los mismos que usa el registro estatal de huella de carbono. Tu informe es una autodeclaración: lista para entregar a tu cliente y como base para inscribirte en ese registro.",
+    },
+    faq: {
+      eyebrow: "Antes de que lo preguntes",
+      title: "Lo que todo el mundo pregunta",
+      items: [
+        {
+          q: "¿Es un certificado oficial?",
+          a: "No. Es tu autodeclaración de huella de carbono, calculada con los factores oficiales del MITECO. Sirve para entregársela a tu cliente; no es una certificación emitida por un tercero (eso lo hace un verificador acreditado).",
+        },
+        {
+          q: "¿Me vale para inscribirme en el registro del MITECO?",
+          a: "Sí, como base: te damos el cálculo de Alcance 1 y 2 con los factores oficiales, que es justo lo que pide el registro estatal. La inscripción para obtener el sello la haces tú en la web del MITECO con esos números.",
+        },
+        {
+          q: "¿Y si mi cliente exige verificación (AENOR)?",
+          a: "Para licitaciones o requisitos que piden verificación acreditada necesitas un verificador externo (por ejemplo, AENOR). Nuestro informe le sirve de punto de partida.",
+        },
+        {
+          q: "¿El Alcance 3 estimado cuenta?",
+          a: "Sí. El Alcance 3 es opcional y se admite estimarlo (método por gasto), tanto en el GHG Protocol como en el registro del MITECO. Lo esencial —Alcance 1 y 2— lo calculamos con los consumos reales de tus facturas.",
+        },
+      ],
     },
     finalCta: {
       title: "Deja de posponer algo que se hace en un día.",
@@ -428,7 +455,29 @@ export const copy: Record<Lang, SiteCopy> = {
     },
     trust: {
       badge: "MITECO · 2026",
-      body: "Calculations use the official MITECO emission factors (Spain's Ministry for the Ecological Transition), updated every fiscal year — the same reference required by Spain's voluntary carbon footprint registry.",
+      body: "We calculate with the official MITECO emission factors, updated every year — the same ones Spain's national carbon-footprint registry uses. Your report is a self-declaration: ready to hand to your client and a basis to register there.",
+    },
+    faq: {
+      eyebrow: "Before you ask",
+      title: "What everyone asks",
+      items: [
+        {
+          q: "Is it an official certificate?",
+          a: "No. It's your self-declared carbon footprint, calculated with the official MITECO factors. It's meant to hand to your client; it isn't a third-party certification (that's issued by an accredited verifier).",
+        },
+        {
+          q: "Can I use it to register with MITECO?",
+          a: "Yes, as a basis: we give you the Scope 1 and 2 calculation with the official factors, which is exactly what Spain's national registry asks for. You do the registration for the seal on the MITECO website with those numbers.",
+        },
+        {
+          q: "What if my client demands verification (AENOR)?",
+          a: "For tenders or requirements that ask for accredited verification you need an external verifier (e.g. AENOR). Our report serves as the starting point.",
+        },
+        {
+          q: "Does the estimated Scope 3 count?",
+          a: "Yes. Scope 3 is optional and may be estimated (spend-based method), both under the GHG Protocol and MITECO's registry. The essential part — Scope 1 and 2 — we calculate from the real consumption on your bills.",
+        },
+      ],
     },
     finalCta: {
       title: "Stop postponing something that takes one day.",
