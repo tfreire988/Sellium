@@ -369,19 +369,21 @@ export function InformeDocument(data: InformeData) {
           <Text style={styles.valueCell}>{fmt(a2)} t CO2e</Text>
         </View>
 
-        {data.alcance3_estimado_tco2e != null ? (
-          <View style={styles.row}>
-            <View style={styles.scopeCell}>
-              <Text style={{ ...styles.scopeName, color: MUTED }}>Alcance 3 — Estimación</Text>
-              <Text style={styles.scopeDesc}>
-                Estimación por gasto (spend-based), no medición directa.
-              </Text>
-            </View>
-            <Text style={{ ...styles.valueCell, color: MUTED }}>
-              {fmt(data.alcance3_estimado_tco2e)} t CO2e
+        <View style={styles.row}>
+          <View style={styles.scopeCell}>
+            <Text style={{ ...styles.scopeName, color: MUTED }}>Alcance 3 — Estimación</Text>
+            <Text style={styles.scopeDesc}>
+              {data.alcance3_estimado_tco2e != null
+                ? "Estimación por gasto (spend-based), no medición directa."
+                : "No incluido en este informe (no se declaró gasto a terceros)."}
             </Text>
           </View>
-        ) : null}
+          <Text style={{ ...styles.valueCell, color: MUTED }}>
+            {data.alcance3_estimado_tco2e != null
+              ? `${fmt(data.alcance3_estimado_tco2e)} t CO2e`
+              : "No incluido"}
+          </Text>
+        </View>
 
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>Total</Text>

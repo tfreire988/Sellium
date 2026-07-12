@@ -70,6 +70,16 @@ export interface ResultadoCalculo {
 const KG_POR_TONELADA = 1000;
 
 /**
+ * Generic spend-based factor for the OPTIONAL Scope 3 estimate (kgCO2e per €).
+ *
+ * NOT a MITECO factor — MITECO only publishes Scope 1 & 2. This is a single
+ * average drawn from environmentally-extended input-output data, applied only
+ * when the user opts in by declaring an annual third-party spend. The report
+ * labels the resulting figure as an approximation, never a measurement.
+ */
+export const FACTOR_ALCANCE3_DEFAULT = 0.3;
+
+/**
  * Aggregates consumption × factor into Scope 1/2 tonnes CO2e.
  *
  * @param facturas       bills with `consumo_extraido` already validated
