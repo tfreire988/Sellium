@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/server/supabase";
+import { getAuthUser } from "@/lib/server/supabase-auth";
+import { uploadInformePDF } from "@/lib/server/storage";
+import { renderInformePDF } from "@/lib/pdf/render";
 import { calcularInforme } from "@/lib/emisiones";
+import { buildInformeData, refInforme } from "@/lib/informe";
 import type {
   Destinatario,
   FacturaConsumo,
   FactorEmision,
+  Informe,
+  Profile,
 } from "@/lib/db-types";
 
 export const runtime = "nodejs";
@@ -12,12 +18,9 @@ export const runtime = "nodejs";
 /**
  * POST /api/informes/generar  — sellium-brief-desarrollo.md §3.4–3.6
  *
- * Given a destinatario and a set of bills, compute Scope 1/2 (+ optional Scope 3
- * estimate) using the in-house MITECO factors for the reporting year, render the
- * PDF, upload it to Storage, and insert the `informes` row.
- *
- * The maths runs through the pure `calcularInforme` helper; only the PDF render
- * + Storage upload remain to be wired.
+ * Full flow: authenticate → load emisor + destinatario + bills + factors →
+ * compute Scope 1/2 (+ optional Scope 3 estimate) → render the PDF → upload to
+ * Storage → insert the `informes` row → return it.
  */
 
 interface GenerarBody {
@@ -31,6 +34,11 @@ interface GenerarBody {
 }
 
 export async function POST(req: Request) {
+  const user = await getAuthUser();
+  if (!user) {
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  }
+
   let body: GenerarBody;
   try {
     body = (await req.json()) as GenerarBody;
@@ -47,32 +55,47 @@ export async function POST(req: Request) {
   const ejercicio = body.ejercicio ?? new Date().getFullYear();
   const db = getServiceClient();
 
-  // Load destinatario, bills, and the factor set for the reporting year.
-  const [destRes, facturasRes, factoresRes] = await Promise.all([
+  const [profileRes, destRes, facturasRes, factoresRes] = await Promise.all([
+    db.from("profiles").select("*").eq("id", user.id).single<Profile>(),
     db.from("destinatarios").select("*").eq("id", body.destinatarioId).single<Destinatario>(),
     db.from("facturas_consumo").select("*").in("id", body.facturaIds).returns<FacturaConsumo[]>(),
     db.from("factores_emision").select("*").eq("ejercicio", ejercicio).returns<FactorEmision[]>(),
   ]);
 
+  if (profileRes.error || !profileRes.data) {
+    return NextResponse.json({ error: "Perfil no encontrado" }, { status: 404 });
+  }
   if (destRes.error || !destRes.data) {
     return NextResponse.json({ error: "Destinatario not found" }, { status: 404 });
   }
+  const emisor = profileRes.data;
+  const destinatario = destRes.data;
+
+  // The destinatario must belong to the caller (defence in depth alongside RLS).
+  if (destinatario.profile_id !== user.id) {
+    return NextResponse.json({ error: "Destinatario ajeno" }, { status: 403 });
+  }
+
   const facturas = facturasRes.data ?? [];
   const factores = factoresRes.data ?? [];
 
-  // Guard: never compute from a bill still awaiting manual review (brief §3.3).
-  const enRevision = facturas.filter((f) => f.estado_extraccion !== "ok");
-  if (enRevision.length > 0) {
+  if (factores.length === 0) {
     return NextResponse.json(
-      {
-        error: "Some bills are not confirmed yet",
-        revisar: enRevision.map((f) => f.id),
-      },
+      { error: `No hay factores de emisión cargados para el ejercicio ${ejercicio}` },
       { status: 409 },
     );
   }
 
-  const resultado = calcularInforme(
+  // Never compute from a bill still awaiting manual review (brief §3.3).
+  const enRevision = facturas.filter((f) => f.estado_extraccion !== "ok");
+  if (enRevision.length > 0) {
+    return NextResponse.json(
+      { error: "Some bills are not confirmed yet", revisar: enRevision.map((f) => f.id) },
+      { status: 409 },
+    );
+  }
+
+  const calculo = calcularInforme(
     facturas,
     factores,
     ejercicio,
@@ -80,16 +103,70 @@ export async function POST(req: Request) {
     body.factorAlcance3,
   );
 
-  // TODO(pdf): render the formal PDF (no hand-drawn imperfection — brief diseño §5),
-  // upload to Storage, then insert the `informes` row with pdf_url + estado 'listo'.
-  return NextResponse.json(
-    {
-      error: "Not implemented",
-      detail: "Calculation runs; PDF render + Storage upload + insert pending.",
-      preview: { ejercicio, ...resultado },
-    },
-    { status: 501 },
+  // Insert the row first (draft) to obtain the id used in the storage path and ref.
+  const { data: inserted, error: insertErr } = await db
+    .from("informes")
+    .insert({
+      profile_id: user.id,
+      destinatario_id: destinatario.id,
+      cliente_gestionado_id: destinatario.cliente_gestionado_id,
+      ejercicio,
+      alcance1_tco2e: calculo.alcance1_tco2e,
+      alcance2_tco2e: calculo.alcance2_tco2e,
+      alcance3_estimado_tco2e: calculo.alcance3_estimado_tco2e,
+      estado: "borrador",
+    })
+    .select("*")
+    .single<Informe>();
+
+  if (insertErr || !inserted) {
+    return NextResponse.json(
+      { error: `No se pudo crear el informe: ${insertErr?.message}` },
+      { status: 500 },
+    );
+  }
+
+  // Cite the factor source actually used (first row of the ejercicio's set).
+  const fuenteFactores = factores[0]?.fuente ?? `MITECO ${ejercicio}`;
+
+  const pdf = await renderInformePDF(
+    buildInformeData({
+      emisor: { nombre: emisor.nombre_empresa, nif: emisor.nif },
+      destinatario: destinatario.nombre_cliente_grande,
+      ejercicio,
+      calculo,
+      factorAnio: ejercicio,
+      fuenteFactores,
+      numero: refInforme(ejercicio, seqFromId(inserted.id)),
+    }),
   );
+
+  const pdfPath = await uploadInformePDF(user.id, inserted.id, pdf);
+
+  const { data: updated, error: updateErr } = await db
+    .from("informes")
+    .update({ pdf_url: pdfPath, estado: "listo" })
+    .eq("id", inserted.id)
+    .select("*")
+    .single<Informe>();
+
+  if (updateErr || !updated) {
+    return NextResponse.json(
+      { error: `Informe generado pero no se pudo actualizar: ${updateErr?.message}` },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json(
+    { informe: updated, sinFactor: calculo.sinFactor },
+    { status: 201 },
+  );
+}
+
+/** Small deterministic sequence hint from a uuid, just for the human-facing ref. */
+function seqFromId(id: string): number {
+  const hex = id.replace(/-/g, "").slice(0, 6);
+  return parseInt(hex, 16) % 10000;
 }
 
 export type { GenerarBody };
