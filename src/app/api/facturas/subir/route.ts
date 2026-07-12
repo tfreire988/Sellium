@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { getServiceClient } from "@/lib/server/supabase";
 import { getAuthUser } from "@/lib/server/supabase-auth";
+import { ensureProfile } from "@/lib/server/ensure-profile";
 import { BUCKET_FACTURAS } from "@/lib/server/storage";
 import type { FacturaConsumo, TipoFactura } from "@/lib/db-types";
 
@@ -27,6 +28,8 @@ export async function POST(req: Request) {
   if (!user) {
     return NextResponse.json({ error: "No autenticado" }, { status: 401 });
   }
+  // Belt-and-suspenders: make sure the profile row exists before we reference it.
+  await ensureProfile(user);
 
   let form: FormData;
   try {
