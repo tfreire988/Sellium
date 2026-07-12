@@ -9,13 +9,13 @@ import { requireEnv } from "./env";
  */
 
 /**
- * Model used for invoice extraction. Per the Claude API guidance the default is
- * Opus 4.8. Invoice extraction is a high-volume vision workload, so this is the
- * single knob to turn if you want to trade some accuracy for lower cost —
- * `claude-haiku-4-5` ($1/$5 per MTok vs $5/$25) is the usual budget choice.
- * Changing this string is the only edit required.
+ * Model used for invoice extraction. The Claude API default is Opus 4.8;
+ * per the project's explicit budget constraint (prepaid, auto-recharge off) this
+ * is set to Haiku 4.5 — the usual low-cost choice for high-volume vision work
+ * ($1/$5 per MTok vs Opus's $5/$25). To favour accuracy over cost, switch this
+ * single constant back to "claude-opus-4-8"; nothing else changes.
  */
-export const EXTRACTION_MODEL = "claude-opus-4-8";
+export const EXTRACTION_MODEL = "claude-haiku-4-5";
 
 let cached: Anthropic | null = null;
 
