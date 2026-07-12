@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  /* Sellium design tokens — see uploads/sellium-brief-diseno.md */
+  --color-ink: #1c2620;
+  --color-paper: #f2eee0;
+  --color-paper-2: #fbf8ef;
+  --color-paper-text: #241f16;
+  --color-paper-muted: #7c7368;
+  --color-paper-border: #d8d0bc;
+  --color-paper-row: #e4decc;
+  --color-doc-shadow: #e8e2d0;
+  --color-sello: #b8763a;
+  --color-sello-hover: #c98544;
+  --color-sello-hover-2: #a6682f;
+  --color-verificado: #4f6b4a;
+  --color-ink-text: #f2eee0;
+  --color-ink-muted: #8c9689;
+  --color-ink-line: rgba(140, 150, 137, 0.22);
+  --color-alerta: #c9752a;
+  --color-error: #9c3b3b;
+  --color-link: #c98f55;
+
+  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-ibm-plex-sans), Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), "Courier New", monospace;
+
+  /* Sellium ships one breakpoint: stacked mobile below it, the wide desktop
+     layout at/above it. There is no intermediate tablet layout by design. */
+  --breakpoint-dt: 860px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-ink);
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--color-sello);
+  text-decoration: underline;
+}
+
+::selection {
+  background: var(--color-sello);
+  color: var(--color-ink);
+}
