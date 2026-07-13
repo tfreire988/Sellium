@@ -34,6 +34,14 @@ export default function RegistroPage() {
       setError(error.message);
       return;
     }
+    // Fire-and-forget welcome email — never block or fail the sign-up on it.
+    if (data.user) {
+      void fetch("/api/bienvenida", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ userId: data.user.id, email }),
+      }).catch(() => {});
+    }
     // If email confirmation is on, there's no session yet — ask them to confirm.
     if (!data.session) {
       setCheckEmail(true);
