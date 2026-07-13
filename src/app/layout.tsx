@@ -30,7 +30,7 @@ const DESCRIPTION =
   "Sube tus facturas de luz, gas o combustible y genera un informe de huella de carbono listo para tu cliente, con los factores oficiales del MITECO. Gratis durante la beta.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sellium-zeta.vercel.app"),
+  metadataBase: new URL("https://sellium.eu"),
   title: {
     default: TITLE,
     template: "%s · Sellium",

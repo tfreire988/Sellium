@@ -96,7 +96,7 @@ export function DemoVideo() {
           </div>
           <div className="flex flex-1 items-center justify-center">
             <span className="rounded-tl-[5px] rounded-tr-[3px] rounded-br-[6px] rounded-bl-[3px] bg-ink-text/8 px-3 py-[3px] font-mono text-[10px] tracking-[0.5px] text-ink-muted dt:text-[11px]">
-              app.sellium.es
+              app.sellium.eu
             </span>
           </div>
           <div className="w-[54px]" />
