@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/lib/language-context";
 import { copy } from "@/lib/copy";
 import { InvoiceThumb } from "./InvoiceThumb";
@@ -21,14 +21,36 @@ export function DemoVideo() {
 
   const [tick, setTick] = useState(0);
   const [playing, setPlaying] = useState(true);
+  const [inView, setInView] = useState(true);
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  // Don't autoplay for users who asked the OS for reduced motion.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setPlaying(false);
+    }
+  }, []);
+
+  // Only animate while the demo is actually on screen.
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.15 },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (!playing) return;
+    if (!playing || !inView) return;
     const id = setInterval(() => {
       setTick((v) => (v + 1) % TOTAL_TICKS);
     }, TICK_MS);
     return () => clearInterval(id);
-  }, [playing]);
+  }, [playing, inView]);
 
   const scene = Math.floor(tick / 11);
   const st = tick % 11;
@@ -61,6 +83,7 @@ export function DemoVideo() {
       </div>
 
       <div
+        ref={frameRef}
         className="relative overflow-hidden rounded-tl-[12px] rounded-tr-[6px] rounded-br-[10px] rounded-bl-[7px] border border-ink-muted/28 bg-[#121813] shadow-[0_20px_46px_rgba(10,7,3,0.5)]"
         style={{ aspectRatio: "16 / 10" }}
       >
@@ -183,6 +206,7 @@ export function DemoVideo() {
         <div className="absolute inset-x-0 bottom-0 z-20 flex h-[46px] items-center gap-4 border-t border-ink-muted/20 bg-black/40 px-[18px]">
           <button
             onClick={() => setPlaying((p) => !p)}
+            aria-label={playing ? "Pausar demo" : "Reproducir demo"}
             className="h-[26px] w-8 cursor-pointer rounded-tl-[5px] rounded-tr-[3px] rounded-br-[6px] rounded-bl-[3px] border border-ink-text/40 bg-transparent font-mono text-[11px] text-ink-text"
           >
             {playing ? "❚❚" : "▶"}

@@ -47,6 +47,28 @@ body {
   overflow-x: hidden;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Anchored sections shouldn't land glued to the viewport edge. */
+section[id] {
+  scroll-margin-top: 28px;
+}
+
+/* Visible keyboard focus, in brand color — never remove, only style. */
+:focus-visible {
+  outline: 2px solid var(--color-sello);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
 body {
   font-family: var(--font-sans);
   color: var(--color-ink-text);

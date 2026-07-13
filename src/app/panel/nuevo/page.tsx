@@ -62,6 +62,7 @@ export default function NuevoInformePage() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [cliente, setCliente] = useState("");
   const [gasto, setGasto] = useState("");
+  const [arrastrando, setArrastrando] = useState(false);
   const [generando, setGenerando] = useState(false);
   const [genError, setGenError] = useState<string | null>(null);
 
@@ -254,7 +255,21 @@ export default function NuevoInformePage() {
         {/* Dropzone */}
         <button
           onClick={() => inputRef.current?.click()}
-          className="mb-6 flex w-full flex-col items-center justify-center gap-2 rounded-tl-[10px] rounded-tr-[6px] rounded-br-[9px] rounded-bl-[6px] border-[1.5px] border-dashed border-ink-muted/40 bg-white/[0.02] px-6 py-10 hover:border-sello"
+          onDragOver={(e) => {
+            e.preventDefault();
+            setArrastrando(true);
+          }}
+          onDragLeave={() => setArrastrando(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setArrastrando(false);
+            handleFiles(e.dataTransfer.files);
+          }}
+          className={`mb-6 flex w-full flex-col items-center justify-center gap-2 rounded-tl-[10px] rounded-tr-[6px] rounded-br-[9px] rounded-bl-[6px] border-[1.5px] border-dashed px-6 py-10 transition-colors ${
+            arrastrando
+              ? "border-sello bg-sello/10"
+              : "border-ink-muted/40 bg-white/[0.02] hover:border-sello"
+          }`}
         >
           <span className="font-mono text-[12px] tracking-[1.5px] text-ink-muted">
             SUELTA AQUÍ TUS FACTURAS · {TIPOS.find((t) => t.value === tipo)?.label}
