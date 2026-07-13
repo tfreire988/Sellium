@@ -35,6 +35,8 @@ function stripFences(text: string): string {
     .trim();
 }
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 export async function extraerConGemini(
   mime: string,
   base64: string,
@@ -42,33 +44,48 @@ export async function extraerConGemini(
 ): Promise<ExtraccionRaw> {
   const key = requireEnv("GEMINI_API_KEY");
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
-
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "content-type": "application/json", "x-goog-api-key": key },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [
-            { inline_data: { mime_type: mime, data: base64 } },
-            { text: `${prompt}\n\n${SHAPE_INSTRUCTION}` },
-          ],
-        },
-      ],
-      generationConfig: { responseMimeType: "application/json", temperature: 0 },
-    }),
+  const body = JSON.stringify({
+    contents: [
+      {
+        parts: [
+          { inline_data: { mime_type: mime, data: base64 } },
+          { text: `${prompt}\n\n${SHAPE_INSTRUCTION}` },
+        ],
+      },
+    ],
+    generationConfig: { responseMimeType: "application/json", temperature: 0 },
   });
 
-  if (!res.ok) {
-    const detail = (await res.text()).slice(0, 300);
-    throw new Error(`Gemini ${res.status}: ${detail}`);
+  // The free tier returns 503 (overloaded) or 429 (rate limit) under load; these
+  // spikes are transient, so retry a few times with a short backoff before
+  // surfacing the error (the bill then just falls to manual review).
+  const MAX_ATTEMPTS = 4;
+  const RETRYABLE = new Set([429, 500, 502, 503]);
+  let lastDetail = "";
+
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-goog-api-key": key },
+      body,
+    });
+
+    if (res.ok) {
+      const json = (await res.json()) as {
+        candidates?: { content?: { parts?: { text?: string }[] } }[];
+      };
+      const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error("Gemini devolvió una respuesta vacía");
+      return JSON.parse(stripFences(text)) as ExtraccionRaw;
+    }
+
+    lastDetail = (await res.text()).slice(0, 300);
+    if (RETRYABLE.has(res.status) && attempt < MAX_ATTEMPTS - 1) {
+      await sleep(600 * 2 ** attempt); // 0.6s, 1.2s, 2.4s
+      continue;
+    }
+    throw new Error(`Gemini ${res.status}: ${lastDetail}`);
   }
 
-  const json = (await res.json()) as {
-    candidates?: { content?: { parts?: { text?: string }[] } }[];
-  };
-  const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
-  if (!text) throw new Error("Gemini devolvió una respuesta vacía");
-
-  return JSON.parse(stripFences(text)) as ExtraccionRaw;
+  throw new Error(`Gemini saturado tras ${MAX_ATTEMPTS} intentos: ${lastDetail}`);
 }
