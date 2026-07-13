@@ -51,19 +51,23 @@ export default function CookiesPage() {
       />
       <P>
         <strong className="text-ink-text">Analíticas (requieren tu consentimiento).</strong>{" "}
-        Nos ayudan a entender de forma agregada cómo se usa el sitio para mejorarlo.
-        Solo se activan si las aceptas y puedes revocarlas en cualquier momento.
+        Usamos <strong className="text-ink-text">Google Analytics 4</strong> para entender de
+        forma agregada cómo se usa el sitio y mejorarlo. Estas cookies{" "}
+        <strong className="text-ink-text">solo se cargan si aceptas las cookies analíticas</strong>;
+        si las rechazas, Google Analytics no se activa. Puedes revocar tu consentimiento en
+        cualquier momento (sección 3).
       </P>
+      <Table
+        head={["Cookie", "Proveedor", "Finalidad", "Duración"]}
+        rows={[
+          ["_ga", "Google", "Distinguir usuarios de forma agregada.", "Hasta 2 años"],
+          ["_ga_<id>", "Google", "Mantener el estado de la sesión de analítica.", "Hasta 2 años"],
+        ]}
+      />
       <P>
-        <strong className="text-ink-text">Marketing (requieren tu consentimiento).</strong>{" "}
-        Para medir campañas. Están desactivadas por defecto y solo se activan si las
-        aceptas expresamente.
-      </P>
-      <P className="text-[14px] text-ink-muted">
-        En el momento de esta versión, Sellium no tiene activadas cookies analíticas ni
-        de marketing de terceros. Si en el futuro las incorporamos, se solicitará tu
-        consentimiento previo a través del panel de configuración de cookies y se
-        detallarán aquí.
+        <strong className="text-ink-text">Marketing.</strong>{" "}
+        No usamos cookies de marketing ni publicitarias de terceros. Si en el futuro las
+        incorporáramos, se solicitaría tu consentimiento previo y se detallarían aquí.
       </P>
 
       <H2>3. Gestión y retirada del consentimiento</H2>

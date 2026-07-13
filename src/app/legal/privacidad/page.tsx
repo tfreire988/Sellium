@@ -147,6 +147,11 @@ export default function PrivacidadPage() {
             "Envío de correos transaccionales (informes y notificaciones).",
             "EE. UU. — Cláusulas Contractuales Tipo (CCT).",
           ],
+          [
+            "Google (Analytics)",
+            "Analítica de uso del sitio, solo si consientes las cookies analíticas.",
+            "EE. UU. — Cláusulas Contractuales Tipo (CCT).",
+          ],
         ]}
       />
       <P>

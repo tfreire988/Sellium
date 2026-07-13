@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Fraunces, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { CookieConsent } from "@/components/CookieConsent";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -64,6 +65,7 @@ export default function RootLayout({
       <body className="bg-ink text-ink-text antialiased">
         {children}
         <CookieConsent />
+        <GoogleAnalytics />
       </body>
     </html>
   );

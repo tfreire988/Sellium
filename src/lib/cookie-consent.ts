@@ -8,6 +8,9 @@
  */
 export const CONSENT_KEY = "sellium-cookie-consent";
 export const CONSENT_VERSION = 1;
+/** Fired on the window whenever the consent choice changes, so listeners
+ *  (e.g. analytics) can react without a page reload. */
+export const CONSENT_EVENT = "sellium-consent-changed";
 
 export interface CookieConsent {
   version: number;
@@ -39,5 +42,6 @@ export function saveConsent(choice: { analiticas: boolean; marketing: boolean })
     fecha: new Date().toISOString(),
   };
   window.localStorage.setItem(CONSENT_KEY, JSON.stringify(value));
+  window.dispatchEvent(new Event(CONSENT_EVENT));
   return value;
 }
