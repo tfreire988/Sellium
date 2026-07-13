@@ -29,6 +29,24 @@ export const EXTRACTION_PROMPT =
   "(3) Las fechas en formato YYYY-MM-DD. " +
   "(4) Responde SOLO con el objeto JSON pedido, sin texto adicional.";
 
+/** Exact JSON shape both providers must return (appended to the prompt). */
+export const JSON_SHAPE_INSTRUCTION =
+  "Devuelve EXCLUSIVAMENTE un objeto JSON con estas cinco claves exactas: " +
+  '{"tipo_fuente": string|null, "periodo_inicio": string|null, "periodo_fin": string|null, "consumo": number|null, "unidad": string|null}. ' +
+  'tipo_fuente uno de "electricidad_red","gas_natural","gasoleo_a","gasoleo_c","gasolina","otro" o null. ' +
+  "periodo_inicio y periodo_fin en formato YYYY-MM-DD o null. " +
+  "consumo: número sin separadores de miles ni unidad, o null. " +
+  'unidad una de "kWh","m3","litros" o null.';
+
+/** Strips ```json fences a model may wrap around its JSON output. */
+export function stripCodeFences(text: string): string {
+  return text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+}
+
 /**
  * JSON schema for output_config.format. Numeric range checks are NOT expressed
  * here (structured outputs don't support minimum/maximum) — they run in

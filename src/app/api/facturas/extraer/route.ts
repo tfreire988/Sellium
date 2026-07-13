@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/server/supabase";
 import { getAuthUser } from "@/lib/server/supabase-auth";
 import { extraerConGemini } from "@/lib/server/gemini";
+import { extraerConClaude } from "@/lib/server/anthropic";
 import { BUCKET_FACTURAS } from "@/lib/server/storage";
 import { EXTRACTION_PROMPT, validarExtraccion, type ExtraccionRaw } from "@/lib/extraccion";
 import type { FacturaConsumo } from "@/lib/db-types";
@@ -71,10 +72,14 @@ export async function POST(req: Request) {
   const mime = blob.type || "image/jpeg";
   const base64 = Buffer.from(await blob.arrayBuffer()).toString("base64");
 
-  // 3. Ask the vision model (Gemini) for structured JSON.
+  // 3. Ask the vision model for structured JSON. Provider is chosen by which key
+  //    is configured: Claude if ANTHROPIC_API_KEY is set, otherwise Gemini
+  //    (free). Switching providers is just a Vercel env-var change.
   let raw: ExtraccionRaw;
   try {
-    raw = await extraerConGemini(mime, base64, EXTRACTION_PROMPT);
+    raw = process.env.ANTHROPIC_API_KEY
+      ? await extraerConClaude(mime, base64, EXTRACTION_PROMPT)
+      : await extraerConGemini(mime, base64, EXTRACTION_PROMPT);
   } catch (err) {
     const detail = err instanceof Error ? err.message : "error desconocido";
     return NextResponse.json({ error: `Fallo en la extracción: ${detail}` }, { status: 502 });
