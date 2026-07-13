@@ -13,7 +13,10 @@ import type { ExtraccionRaw } from "../extraccion";
  * Model is overridable via GEMINI_MODEL (not a secret) so we can move to a newer
  * Flash without a code change.
  */
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+// `gemini-flash-latest` is Google's rolling alias for the current Flash model
+// (Gemini 3.5 Flash as of 2026), so we don't break when a pinned version is
+// retired for new users. Override with GEMINI_MODEL to pin a specific version.
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
 
 /** Exact JSON shape validarExtraccion expects — spelled out for the model. */
 const SHAPE_INSTRUCTION =
