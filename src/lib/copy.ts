@@ -347,7 +347,7 @@ export const copy: Record<Lang, SiteCopy> = {
       legal: "Aviso legal",
       privacy: "Privacidad",
       cookies: "Cookies",
-      email: "contacto@sellium.eu",
+      email: "contact@sellium.eu",
     },
   },
   en: {
@@ -551,7 +551,7 @@ export const copy: Record<Lang, SiteCopy> = {
       legal: "Legal notice",
       privacy: "Privacy",
       cookies: "Cookies",
-      email: "contacto@sellium.eu",
+      email: "contact@sellium.eu",
     },
   },
 };
