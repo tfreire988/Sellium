@@ -90,6 +90,8 @@ export async function POST(req: Request) {
   const { error: sendErr } = await resend.emails.send({
     from,
     to: body.email,
+    // Replies must reach the sender (the pyme), not our no-mailbox address.
+    ...(user.email ? { replyTo: user.email } : {}),
     subject: `Informe de huella de carbono · ${cliente} · ${informe.ejercicio}`,
     html: emailHtml(cliente, informe.ejercicio),
     attachments: [{ filename: `Informe_${informe.ejercicio}.pdf`, content: pdf }],
