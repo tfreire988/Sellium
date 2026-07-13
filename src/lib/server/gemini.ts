@@ -58,17 +58,35 @@ export async function extraerConGemini(
 
   // The free tier returns 503 (overloaded) or 429 (rate limit) under load; these
   // spikes are transient, so retry a few times with a short backoff before
-  // surfacing the error (the bill then just falls to manual review).
-  const MAX_ATTEMPTS = 4;
+  // surfacing the error (the bill then just falls to manual review). Each
+  // attempt is time-boxed so one hung request can't burn the whole budget.
+  const MAX_ATTEMPTS = 3;
+  const PER_ATTEMPT_MS = 18_000;
   const RETRYABLE = new Set([429, 500, 502, 503]);
   let lastDetail = "";
 
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-goog-api-key": key },
-      body,
-    });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), PER_ATTEMPT_MS);
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-goog-api-key": key },
+        body,
+        signal: controller.signal,
+      });
+    } catch (e) {
+      // Timeout/network error — retry if we can.
+      lastDetail = e instanceof Error ? e.message : String(e);
+      if (attempt < MAX_ATTEMPTS - 1) {
+        await sleep(600 * 2 ** attempt);
+        continue;
+      }
+      throw new Error(`Gemini no respondió a tiempo: ${lastDetail}`);
+    } finally {
+      clearTimeout(timer);
+    }
 
     if (res.ok) {
       const json = (await res.json()) as {
@@ -81,7 +99,7 @@ export async function extraerConGemini(
 
     lastDetail = (await res.text()).slice(0, 300);
     if (RETRYABLE.has(res.status) && attempt < MAX_ATTEMPTS - 1) {
-      await sleep(600 * 2 ** attempt); // 0.6s, 1.2s, 2.4s
+      await sleep(600 * 2 ** attempt); // 0.6s, 1.2s
       continue;
     }
     throw new Error(`Gemini ${res.status}: ${lastDetail}`);

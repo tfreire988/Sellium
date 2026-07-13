@@ -29,6 +29,24 @@ const TIPOS: { value: TipoFactura; label: string }[] = [
   { value: "otro", label: "Otro" },
 ];
 
+/**
+ * Reads a Response as JSON without ever throwing. A serverless timeout or crash
+ * returns a plain-text error page (not JSON); surface a clean message for that
+ * instead of a raw "Unexpected token" parse error.
+ */
+async function safeJson(res: Response): Promise<Record<string, unknown>> {
+  const text = await res.text();
+  try {
+    return JSON.parse(text) as Record<string, unknown>;
+  } catch {
+    return {
+      error: res.ok
+        ? "El servidor devolvió una respuesta inesperada."
+        : `El servidor tardó demasiado o falló (${res.status}). Reinténtalo o introduce el consumo a mano.`,
+    };
+  }
+}
+
 const BADGE: Record<Estado, { label: string; cls: string }> = {
   subiendo: { label: "Subiendo…", cls: "text-paper-muted border-paper-border" },
   extrayendo: { label: "Leyendo…", cls: "text-paper-muted border-paper-border" },
@@ -85,8 +103,8 @@ export default function NuevoInformePage() {
           periodo_fin: mFin,
         }),
       });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error ?? "No se pudo guardar");
+      const json = await safeJson(res);
+      if (!res.ok) throw new Error(String(json.error ?? "No se pudo guardar"));
       patch(it.key, {
         estado: "ok",
         detalle: `${mConsumo} ${mUnidad} · introducido a mano`,
@@ -117,12 +135,12 @@ export default function NuevoInformePage() {
         fd.append("file", file);
         fd.append("tipo", tipo);
         const up = await fetch("/api/facturas/subir", { method: "POST", body: fd });
-        const upJson = await up.json();
+        const upJson = await safeJson(up);
         if (!up.ok) {
-          patch(key, { estado: "error", detalle: upJson.error });
+          patch(key, { estado: "error", detalle: String(upJson.error ?? "Error al subir") });
           continue;
         }
-        const facturaId = upJson.factura.id as string;
+        const facturaId = (upJson.factura as { id: string }).id;
         patch(key, { estado: "extrayendo", facturaId });
 
         const ex = await fetch("/api/facturas/extraer", {
@@ -130,12 +148,12 @@ export default function NuevoInformePage() {
           headers: { "content-type": "application/json" },
           body: JSON.stringify({ facturaId }),
         });
-        const exJson = await ex.json();
+        const exJson = await safeJson(ex);
         if (!ex.ok) {
-          patch(key, { estado: "error", detalle: exJson.error });
+          patch(key, { estado: "error", detalle: String(exJson.error ?? "Error al leer") });
           continue;
         }
-        const estado = exJson.factura.estado_extraccion as Estado;
+        const estado = (exJson.factura as { estado_extraccion: Estado }).estado_extraccion;
         patch(key, {
           estado: estado === "ok" ? "ok" : "revision_manual",
           detalle: (exJson.motivos as string[] | undefined)?.join(" · "),
@@ -169,8 +187,8 @@ export default function NuevoInformePage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ nombre: cliente.trim() }),
       });
-      const dJson = await dRes.json();
-      if (!dRes.ok) throw new Error(dJson.error ?? "No se pudo crear el cliente");
+      const dJson = await safeJson(dRes);
+      if (!dRes.ok) throw new Error(String(dJson.error ?? "No se pudo crear el cliente"));
 
       // 2. Generate the report from the OK bills (+ optional Scope 3 spend).
       const gastoNum = Number(gasto.replace(/[.\s]/g, "").replace(",", "."));
@@ -179,15 +197,15 @@ export default function NuevoInformePage() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          destinatarioId: dJson.destinatario.id,
+          destinatarioId: (dJson.destinatario as { id: string }).id,
           facturaIds: facturasOk.map((f) => f.facturaId),
           ...(gastoValido ? { gastoAlcance3: gastoNum } : {}),
         }),
       });
-      const gJson = await gRes.json();
-      if (!gRes.ok) throw new Error(gJson.error ?? "No se pudo generar el informe");
+      const gJson = await safeJson(gRes);
+      if (!gRes.ok) throw new Error(String(gJson.error ?? "No se pudo generar el informe"));
 
-      router.push(`/panel/informes/${gJson.informe.id}`);
+      router.push(`/panel/informes/${(gJson.informe as { id: string }).id}`);
     } catch (err) {
       setGenError(err instanceof Error ? err.message : "Error al generar");
       setGenerando(false);
