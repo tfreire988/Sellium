@@ -8,7 +8,7 @@ import type { FacturaConsumo } from "@/lib/db-types";
 
 export const runtime = "nodejs";
 // Extraction can retry a busy free-tier model a few times; give it headroom.
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 /**
  * POST /api/facturas/extraer  — sellium-brief-desarrollo.md §3.2–3.3
