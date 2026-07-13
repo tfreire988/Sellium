@@ -26,8 +26,8 @@ export default function PrivacidadPage() {
         <LI>Responsable: Telmo Freire Montero (persona física)</LI>
         <LI>
           Contacto en materia de protección de datos:{" "}
-          <a href="mailto:contacto@sellium.eu" className="text-link">
-            contacto@sellium.eu
+          <a href="mailto:contact@sellium.eu" className="text-link">
+            contact@sellium.eu
           </a>
         </LI>
       </UL>
@@ -179,8 +179,8 @@ export default function PrivacidadPage() {
         Puedes ejercer los derechos de acceso, rectificación, supresión, oposición,
         limitación del tratamiento y portabilidad, así como retirar el consentimiento
         prestado, escribiendo a{" "}
-        <a href="mailto:contacto@sellium.eu" className="text-link">
-          contacto@sellium.eu
+        <a href="mailto:contact@sellium.eu" className="text-link">
+          contact@sellium.eu
         </a>
         . Podemos solicitarte que acredites tu identidad. Desde tu panel puedes,
         además, eliminar tu cuenta y los datos asociados.
