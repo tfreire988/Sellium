@@ -1,6 +1,6 @@
 import "server-only";
 import { requireEnv } from "./env";
-import type { ExtraccionRaw } from "../extraccion";
+import { JSON_SHAPE_INSTRUCTION, stripCodeFences, type ExtraccionRaw } from "../extraccion";
 
 /**
  * Server-only Google Gemini client for invoice extraction (free tier).
@@ -18,23 +18,6 @@ import type { ExtraccionRaw } from "../extraccion";
 // retired for new users. Override with GEMINI_MODEL to pin a specific version.
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
 
-/** Exact JSON shape validarExtraccion expects — spelled out for the model. */
-const SHAPE_INSTRUCTION =
-  'Devuelve EXCLUSIVAMENTE un objeto JSON con estas cinco claves exactas: ' +
-  '{"tipo_fuente": string|null, "periodo_inicio": string|null, "periodo_fin": string|null, "consumo": number|null, "unidad": string|null}. ' +
-  'tipo_fuente ∈ {"electricidad_red","gas_natural","gasoleo_a","gasoleo_c","gasolina","otro"} o null. ' +
-  'periodo_inicio y periodo_fin en formato YYYY-MM-DD o null. ' +
-  'consumo: número sin separadores de miles ni unidad, o null. ' +
-  'unidad ∈ {"kWh","m3","litros"} o null.';
-
-function stripFences(text: string): string {
-  return text
-    .trim()
-    .replace(/^```(?:json)?\s*/i, "")
-    .replace(/\s*```$/i, "")
-    .trim();
-}
-
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export async function extraerConGemini(
@@ -49,7 +32,7 @@ export async function extraerConGemini(
       {
         parts: [
           { inline_data: { mime_type: mime, data: base64 } },
-          { text: `${prompt}\n\n${SHAPE_INSTRUCTION}` },
+          { text: `${prompt}\n\n${JSON_SHAPE_INSTRUCTION}` },
         ],
       },
     ],
@@ -94,7 +77,7 @@ export async function extraerConGemini(
       };
       const text = json.candidates?.[0]?.content?.parts?.[0]?.text;
       if (!text) throw new Error("Gemini devolvió una respuesta vacía");
-      return JSON.parse(stripFences(text)) as ExtraccionRaw;
+      return JSON.parse(stripCodeFences(text)) as ExtraccionRaw;
     }
 
     lastDetail = (await res.text()).slice(0, 300);
