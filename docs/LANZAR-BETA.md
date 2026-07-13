@@ -110,4 +110,4 @@ suele decir qué variable o bucket falta.
       vigente (`src/components/panel/RegistroMiteco.tsx`).
 - [ ] Cuando quieras **cobrar**: darte de alta como autónomo + activar Stripe +
       añadir Términos de venta y DPA.
-- [ ] Verificar el dominio en Resend para enviar emails desde `@sellium.es`.
+- [ ] Verificar el dominio en Resend para enviar emails desde `@sellium.eu`.

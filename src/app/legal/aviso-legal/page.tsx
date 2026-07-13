@@ -26,8 +26,8 @@ export default function AvisoLegalPage() {
         <LI>Titular: Telmo Freire Montero (persona física)</LI>
         <LI>
           Correo electrónico de contacto:{" "}
-          <a href="mailto:contacto@sellium.es" className="text-link">
-            contacto@sellium.es
+          <a href="mailto:contacto@sellium.eu" className="text-link">
+            contacto@sellium.eu
           </a>
         </LI>
         <LI>
