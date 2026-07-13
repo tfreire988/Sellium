@@ -27,6 +27,15 @@ interface ExtraerBody {
   facturaId: string;
 }
 
+/**
+ * Per-user cap on automatic reads in a rolling 24 h. The prepaid balance is the
+ * ultimate hard cap on spend; this stops a single signed-in account from
+ * draining it by uploading in a loop. At Haiku prices this ceiling is a few
+ * cents/day per user — generous for a real pyme (a handful of bills), tight for
+ * an abuser.
+ */
+const MAX_LECTURAS_DIA = 100;
+
 export async function POST(req: Request) {
   const user = await getAuthUser();
   if (!user) {
@@ -57,6 +66,28 @@ export async function POST(req: Request) {
   }
   if (factura.profile_id !== user.id) {
     return NextResponse.json({ error: "Factura ajena" }, { status: 403 });
+  }
+
+  // Idempotent: an already-confirmed bill doesn't need re-reading (no model cost).
+  if (factura.estado_extraccion === "ok") {
+    return NextResponse.json({ factura, motivos: [] });
+  }
+
+  // Per-user daily rate limit on automatic reads (defence in depth behind the
+  // prepaid spend cap).
+  const desde = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  const { count } = await db
+    .from("facturas_consumo")
+    .select("id", { count: "exact", head: true })
+    .eq("profile_id", user.id)
+    .gte("created_at", desde);
+  if ((count ?? 0) > MAX_LECTURAS_DIA) {
+    return NextResponse.json(
+      {
+        error: `Has alcanzado el límite de ${MAX_LECTURAS_DIA} lecturas automáticas al día. Introduce el consumo a mano o inténtalo mañana.`,
+      },
+      { status: 429 },
+    );
   }
 
   // 2. Download the file bytes from Storage.
