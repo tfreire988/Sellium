@@ -28,7 +28,9 @@ export type EnvKey =
   | "NEXT_PUBLIC_SUPABASE_URL"
   | "NEXT_PUBLIC_SUPABASE_ANON_KEY"
   | "SUPABASE_SERVICE_ROLE_KEY"
-  // Claude (invoice extraction)
+  // AI invoice extraction — Google Gemini (free tier) is the default;
+  // ANTHROPIC_API_KEY stays supported for switching back to Claude.
+  | "GEMINI_API_KEY"
   | "ANTHROPIC_API_KEY"
   // Stripe
   | "STRIPE_SECRET_KEY"
