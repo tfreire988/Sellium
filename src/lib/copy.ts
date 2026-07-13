@@ -125,6 +125,11 @@ export interface SiteCopy {
     title: string;
     items: { q: string; a: string }[];
   };
+  whyNow: {
+    eyebrow: string;
+    title: string;
+    reasons: { lead: string; body: string }[];
+  };
   finalCta: {
     title: string;
     cta: string;
@@ -302,6 +307,36 @@ export const copy: Record<Lang, SiteCopy> = {
           q: "¿El Alcance 3 estimado cuenta?",
           a: "Sí. El Alcance 3 es opcional y se admite estimarlo (método por gasto), tanto en el GHG Protocol como en el registro del MITECO. Lo esencial —Alcance 1 y 2— lo calculamos con los consumos reales de tus facturas.",
         },
+        {
+          q: "¿Usáis mis facturas para entrenar la IA?",
+          a: "No. Trabajamos con las APIs empresariales de nuestros proveedores de IA, no con sus versiones públicas. Por política y términos contractuales de esos proveedores, los datos enviados por API no se usan para entrenar modelos. Los PDFs se procesan y se eliminan de nuestro almacenamiento una vez generado tu informe, y puedes borrar tu historial cuando quieras.",
+        },
+        {
+          q: "¿Por qué necesito IA para algo que parece un cálculo simple?",
+          a: "El cálculo en sí es una multiplicación (consumo × factor de emisión) — ahí no usamos IA. La usamos en el paso anterior: leer tus facturas. Cada compañía (Endesa, Iberdrola, Repsol…) factura en un formato distinto, y programar algo que entienda todos esos formatos a mano es inviable. La IA lee cualquier PDF y extrae el consumo real; nuestro cálculo, transparente y no una caja negra, hace el resto.",
+        },
+        {
+          q: "¿Es tan válido como el informe de una consultora que cobra mucho más?",
+          a: "El Ministerio no exige que una consultora concreta firme el cálculo — exige que siga la metodología oficial (factores del MITECO + GHG Protocol). Hacemos exactamente ese mismo cálculo, automatizado. Lo que ahorras no es rigor, es el tiempo de descifrar facturas y aplicar factores a mano.",
+        },
+      ],
+    },
+    whyNow: {
+      eyebrow: "El momento",
+      title: "¿Por qué ahora, si nadie me obliga todavía?",
+      reasons: [
+        {
+          lead: "Tu cliente grande sí está obligado a reportar su cadena de proveedores.",
+          body: "Si no le das tu dato, no puede completar el suyo — y cada vez más empresas ya se lo exigen a sus proveedores como condición para seguir trabajando juntos.",
+        },
+        {
+          lead: "Cada vez más concursos públicos valoran o exigen la huella de carbono.",
+          body: "Como criterio técnico o de solvencia. No en todos los casos es decisivo, pero presentarte sin ese dato te resta puntos frente a quien sí lo tiene.",
+        },
+        {
+          lead: "Bancos y líneas de financiación piden cada vez más criterios ESG a las pymes.",
+          body: "Tenerlo calculado no es un gasto ecológico: es papeleo que evita que te quedes fuera cuando solicitas crédito.",
+        },
       ],
     },
     finalCta: {
@@ -476,6 +511,36 @@ export const copy: Record<Lang, SiteCopy> = {
         {
           q: "Does the estimated Scope 3 count?",
           a: "Yes. Scope 3 is optional and may be estimated (spend-based method), both under the GHG Protocol and MITECO's registry. The essential part — Scope 1 and 2 — we calculate from the real consumption on your bills.",
+        },
+        {
+          q: "Do you use my bills to train the AI?",
+          a: "No. We work with our AI providers' enterprise APIs, not their public versions. By those providers' policy and contractual terms, data sent via API is not used to train models. PDFs are processed and automatically deleted from our storage once your report is generated, and you can delete your history whenever you want.",
+        },
+        {
+          q: "Why do I need AI for something that looks like a simple calculation?",
+          a: "The calculation itself is a multiplication (consumption × emission factor) — no AI there. We use it in the step before: reading your bills. Every utility (Endesa, Iberdrola, Repsol…) bills in a different format, and hand-coding something that understands them all is unfeasible. The AI reads any PDF and extracts the real consumption; our calculation — transparent, not a black box — does the rest.",
+        },
+        {
+          q: "Is it as valid as a report from a consultancy that charges much more?",
+          a: "The Ministry doesn't require a specific consultancy to sign the calculation — it requires following the official methodology (MITECO factors + GHG Protocol). We do exactly that calculation, automated. What you save isn't rigour, it's the time of deciphering bills and applying factors by hand.",
+        },
+      ],
+    },
+    whyNow: {
+      eyebrow: "The timing",
+      title: "Why now, if nobody's forcing me yet?",
+      reasons: [
+        {
+          lead: "Your big client is required to report its supply chain.",
+          body: "If you don't give them your figure, they can't complete theirs — and more and more companies now require it from suppliers as a condition to keep working together.",
+        },
+        {
+          lead: "Public tenders increasingly value or require a carbon footprint.",
+          body: "As a technical or solvency criterion. It isn't always decisive, but showing up without it costs you points against those who have it.",
+        },
+        {
+          lead: "Banks and financing lines increasingly ask SMEs for ESG criteria.",
+          body: "Having it calculated isn't a green expense: it's paperwork that keeps you from being left out when you apply for credit.",
         },
       ],
     },
