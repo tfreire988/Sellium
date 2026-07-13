@@ -25,10 +25,30 @@ const ibmPlexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const TITLE = "Sellium — Tu huella de carbono, lista en un día";
+const DESCRIPTION =
+  "Sube tus facturas de luz, gas o combustible y genera un informe de huella de carbono listo para tu cliente, con los factores oficiales del MITECO. Gratis durante la beta.";
+
 export const metadata: Metadata = {
-  title: "Sellium — Tu huella de carbono, lista en un día",
-  description:
-    "Informes de huella de carbono para pymes. Sube tus facturas y recibe en 24 h un informe listo para tu cliente, con los factores oficiales del MITECO. 149 € sin permanencia.",
+  metadataBase: new URL("https://sellium-zeta.vercel.app"),
+  title: {
+    default: TITLE,
+    template: "%s · Sellium",
+  },
+  description: DESCRIPTION,
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    url: "/",
+    siteName: "Sellium",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export default function RootLayout({

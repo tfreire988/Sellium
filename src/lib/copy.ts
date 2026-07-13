@@ -52,14 +52,13 @@ export interface SiteCopy {
     title: string;
     step1: { title: string; body: string };
     step2: {
-      number: string;
       title: string;
       body: string;
       chipLabel: string;
       chipValue: string;
     };
     step3: {
-      number: string;
+      title: string;
       filename: string;
       totalLabel: string;
       totalValue: string;
@@ -205,19 +204,18 @@ export const copy: Record<Lang, SiteCopy> = {
         body: "Foto o PDF de luz, gas o combustible del último año. Como las tengas.",
       },
       step2: {
-        number: "2 —",
         title: "Dinos para quién es",
         body: "El informe lleva el nombre de tu cliente y se ajusta a su información conforme trabajamos contigo — no es un PDF genérico con tus datos rellenados.",
         chipLabel: "Destinatario",
         chipValue: "Grupo Altavera Construcciones",
       },
       step3: {
-        number: "3 —",
+        title: "Listo para enviar",
         filename: "Informe_TalleresRovira_2026.pdf",
         totalLabel: "Total",
         totalValue: "18,6 t CO₂e",
         stampWord: "LISTO",
-        body: "Descarga el informe, listo para enviar.",
+        body: "Descarga el PDF con tu cálculo, la metodología y un plan de reducción incluido.",
       },
     },
     demo: {
@@ -410,19 +408,18 @@ export const copy: Record<Lang, SiteCopy> = {
         body: "Photo or PDF of electricity, gas or fuel from the last year. However you have them.",
       },
       step2: {
-        number: "2 —",
         title: "Tell us who it's for",
         body: "The report carries your client's name and is refined together with you — not a generic PDF with your data filled in.",
         chipLabel: "Recipient",
         chipValue: "Grupo Altavera Construcciones",
       },
       step3: {
-        number: "3 —",
+        title: "Ready to send",
         filename: "Report_TalleresRovira_2026.pdf",
         totalLabel: "Total",
         totalValue: "18.6 t CO₂e",
         stampWord: "READY",
-        body: "Download the report, ready to send.",
+        body: "Download the PDF with your calculation, methodology and a reduction plan included.",
       },
     },
     demo: {

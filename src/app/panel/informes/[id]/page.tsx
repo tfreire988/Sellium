@@ -61,7 +61,9 @@ export default async function InformePage({
           Informe · Ejercicio {informe.ejercicio}
         </p>
         <h1 className="m-0 mb-7 font-serif text-[30px] font-semibold">
-          {destinatario?.nombre_cliente_grande ?? "Informe de huella de carbono"}
+          {destinatario
+            ? `Informe para ${destinatario.nombre_cliente_grande}`
+            : "Informe de huella de carbono"}
         </h1>
 
         <div className="relative rounded-tl-[12px] rounded-tr-[5px] rounded-br-[10px] rounded-bl-[6px] bg-paper px-8 py-8 text-paper-text shadow-[0_18px_44px_rgba(15,10,4,0.45)]">
