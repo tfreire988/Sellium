@@ -5,6 +5,21 @@ Todo lo de código ya está hecho; esto es **configuración** en Supabase y Verc
 
 ---
 
+## ⏭️ PENDIENTE — próxima sesión
+
+La app está desplegada y **validada de punta a punta** en `sellium.eu` (registro,
+lectura automática con Claude, cálculo MITECO, informe PDF, envío por email,
+recepción en `contact@`, Google Analytics con consentimiento). Queda:
+
+- [ ] **SMTP de auth por Resend.** Supabase → Authentication → SMTP Settings →
+      Enable Custom SMTP: host `smtp.resend.com`, port `465`, user `resend`,
+      password = API key `re_...`, sender `no-reply@sellium.eu`. Evita el límite
+      de ~4 correos/hora del remitente por defecto y que caigan en spam.
+- [ ] **Confirmar que Resend sigue "Verified"** tras la reorganización del SPF.
+- [ ] (Solo para cobrar) autónomo + Stripe + Términos de venta + DPA.
+
+---
+
 ## 1. Supabase — base de datos
 
 Proyecto: `https://xbtiruphqnjphhbazmha.supabase.co`
