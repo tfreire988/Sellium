@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { LanguageProvider } from "@/lib/language-context";
 import { GrainOverlay } from "@/components/GrainOverlay";
 import { Nav } from "@/components/Nav";
@@ -12,6 +13,10 @@ import { Trust } from "@/components/Trust";
 import { Faq } from "@/components/Faq";
 import { FinalCta } from "@/components/FinalCta";
 import { Footer } from "@/components/Footer";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function Home() {
   return (

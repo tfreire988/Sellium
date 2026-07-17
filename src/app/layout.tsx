@@ -31,7 +31,9 @@ const DESCRIPTION =
   "Sube tus facturas de luz, gas o combustible y genera un informe de huella de carbono listo para tu cliente, con los factores oficiales del MITECO. Gratis durante la beta.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://sellium.eu"),
+  // Canonical host: the apex redirects to www in Vercel, so www is the
+  // canonical origin — every absolute URL (OG, canonical, sitemap) uses it.
+  metadataBase: new URL("https://www.sellium.eu"),
   title: {
     default: TITLE,
     template: "%s · Sellium",
@@ -52,6 +54,31 @@ export const metadata: Metadata = {
   },
 };
 
+/** Organization + WebSite structured data — one block, site-wide. */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.sellium.eu/#org",
+      name: "Sellium",
+      url: "https://www.sellium.eu",
+      logo: "https://www.sellium.eu/icon.svg",
+      email: "contact@sellium.eu",
+      description:
+        "Informes de huella de carbono para pymes y gestorías, calculados con los factores oficiales del MITECO.",
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.sellium.eu/#website",
+      url: "https://www.sellium.eu",
+      name: "Sellium",
+      inLanguage: "es",
+      publisher: { "@id": "https://www.sellium.eu/#org" },
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -63,6 +90,10 @@ export default function RootLayout({
       className={`${fraunces.variable} ${ibmPlexSans.variable} ${ibmPlexMono.variable}`}
     >
       <body className="bg-ink text-ink-text antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+        />
         {children}
         <CookieConsent />
         <GoogleAnalytics />
