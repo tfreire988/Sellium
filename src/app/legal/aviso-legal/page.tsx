@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Aviso legal · Sellium",
   description:
     "Aviso legal y condiciones de uso de Sellium, servicio de informes de huella de carbono para pymes y gestorías.",
+  alternates: { canonical: "/legal/aviso-legal" },
 };
 
 export default function AvisoLegalPage() {

@@ -127,7 +127,7 @@ export interface SiteCopy {
   whyNow: {
     eyebrow: string;
     title: string;
-    reasons: { lead: string; body: string }[];
+    reasons: { tag: string; lead: string; body: string }[];
   };
   finalCta: {
     title: string;
@@ -324,14 +324,17 @@ export const copy: Record<Lang, SiteCopy> = {
       title: "¿Por qué ahora, si nadie me obliga todavía?",
       reasons: [
         {
+          tag: "Directiva CSRD",
           lead: "Tu cliente grande sí está obligado a reportar su cadena de proveedores.",
           body: "Si no le das tu dato, no puede completar el suyo — y cada vez más empresas ya se lo exigen a sus proveedores como condición para seguir trabajando juntos.",
         },
         {
+          tag: "Contratación pública",
           lead: "Cada vez más concursos públicos valoran o exigen la huella de carbono.",
           body: "Como criterio técnico o de solvencia. No en todos los casos es decisivo, pero presentarte sin ese dato te resta puntos frente a quien sí lo tiene.",
         },
         {
+          tag: "Financiación ESG",
           lead: "Bancos y líneas de financiación piden cada vez más criterios ESG a las pymes.",
           body: "Tenerlo calculado no es un gasto ecológico: es papeleo que evita que te quedes fuera cuando solicitas crédito.",
         },
@@ -528,14 +531,17 @@ export const copy: Record<Lang, SiteCopy> = {
       title: "Why now, if nobody's forcing me yet?",
       reasons: [
         {
+          tag: "CSRD directive",
           lead: "Your big client is required to report its supply chain.",
           body: "If you don't give them your figure, they can't complete theirs — and more and more companies now require it from suppliers as a condition to keep working together.",
         },
         {
+          tag: "Public procurement",
           lead: "Public tenders increasingly value or require a carbon footprint.",
           body: "As a technical or solvency criterion. It isn't always decisive, but showing up without it costs you points against those who have it.",
         },
         {
+          tag: "ESG financing",
           lead: "Banks and financing lines increasingly ask SMEs for ESG criteria.",
           body: "Having it calculated isn't a green expense: it's paperwork that keeps you from being left out when you apply for credit.",
         },

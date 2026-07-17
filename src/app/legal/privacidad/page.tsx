@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Política de privacidad · Sellium",
   description:
     "Política de privacidad de Sellium: qué datos tratamos, con qué base legal, con qué proveedores y qué derechos tienes (RGPD / LOPDGDD).",
+  alternates: { canonical: "/legal/privacidad" },
 };
 
 export default function PrivacidadPage() {

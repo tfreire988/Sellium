@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Política de cookies · Sellium",
   description:
     "Política de cookies de Sellium: qué cookies y almacenamiento local usamos, para qué, y cómo gestionar tu consentimiento.",
+  alternates: { canonical: "/legal/cookies" },
 };
 
 export default function CookiesPage() {
